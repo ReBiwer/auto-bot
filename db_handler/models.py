@@ -1,8 +1,7 @@
 from db_handler.custom_field import str_256, pk, created_at, DecimalField
 
 from sqlalchemy import String, ForeignKey, Column
-from sqlalchemy.orm import DeclarativeBase
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
 
 class Base(DeclarativeBase):
@@ -31,6 +30,8 @@ class UserTable(Base):
     name: Mapped[str_256 | None]
     id_telegram: Mapped[int]
 
+    refuelings: Mapped[list['RefuelingTable']] = relationship(back_populates='user')
+
 
 class RefuelingTable(Base):
     __tablename__ = 'Refueling'
@@ -42,3 +43,5 @@ class RefuelingTable(Base):
     mileage = Column(DecimalField(50))
     cost_refueling = Column(DecimalField(50))
     price_gasoline = Column(DecimalField(50))
+
+    user: Mapped["UserTable"] = relationship(back_populates='refuelings')
