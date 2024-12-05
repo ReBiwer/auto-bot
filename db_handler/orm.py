@@ -11,11 +11,11 @@ class BaseOrm:
     def __init__(self):
         self.engine = create_engine(
             url=settings.DATABASE_URL_psycopg,
-            echo=True,
+            # echo=True,
         )
         self.async_engine = create_async_engine(
             url=settings.DATABASE_URL_asyncpg,
-            echo=True
+            # echo=True
         )
         self.session_factory = sessionmaker(self.engine)
         self.async_session_factory = async_sessionmaker(self.async_engine)
@@ -41,9 +41,13 @@ class UserORM(BaseOrm):
             res = await session.execute(query)
             return res.scalars().one()
 
-    async def update_name(self, id_telegram: int, new_name: str) -> None:
+    async def update_user(self, id_telegram: int, new_name: str, new_username) -> None:
         async with self.session_factory() as session:
-            query = update(self.model).filter_by(id_telegram=id_telegram).values(name=new_name)
+            query = (
+                update(self.model)
+                .filter_by(id_telegram=id_telegram)
+                .values(name=new_name, username=new_username)
+            )
             await session.execute(query)
             await session.commit()
 
