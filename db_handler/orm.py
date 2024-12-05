@@ -1,10 +1,10 @@
 from decimal import Decimal
-from .models import UserTable, Base, RefuelingTable
+from db_handler.models import UserTable, Base, RefuelingTable
 
 from sqlalchemy import create_engine, select, update
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
-from .config_db import settings
+from db_handler.config_db import settings
 
 
 class BaseOrm:
@@ -29,17 +29,17 @@ class UserORM(BaseOrm):
         super().__init__()
         self.model = UserTable
 
-    def add_user(self, username: str, name: str, id_telegram: int) -> None:
-        with self.session_factory() as session:
+    async def add_user(self, username: str, name: str, id_telegram: int) -> None:
+        async with self.session_factory() as session:
             added_user = self.model(username=username, name=name, id_telegram=id_telegram)
-            session.add(added_user)
-            session.commit()
+            await session.add(added_user)
+            await session.commit()
 
     async def get_user(self, id_telegram: int) -> UserTable:
         async with self.async_session_factory() as session:
             query = select(self.model).filter_by(id_telegram=id_telegram)
             res = await session.execute(query)
-            return res.scalars().first()
+            return res.scalars().one()
 
     async def update_name(self, id_telegram: int, new_name: str) -> None:
         async with self.session_factory() as session:
