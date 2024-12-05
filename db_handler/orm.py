@@ -30,9 +30,9 @@ class UserORM(BaseOrm):
         self.model = UserTable
 
     async def add_user(self, username: str, name: str, id_telegram: int) -> None:
-        async with self.session_factory() as session:
+        async with self.async_session_factory() as session:
             added_user = self.model(username=username, name=name, id_telegram=id_telegram)
-            await session.add(added_user)
+            session.add(added_user)
             await session.commit()
 
     async def get_user(self, id_telegram: int) -> UserTable:
@@ -67,7 +67,7 @@ class RefuelingORM(BaseOrm):
             cost_refueling: Decimal,
             price_gasoline: Decimal
     ) -> None:
-        async with self.session_factory() as session:
+        async with self.async_session_factory() as session:
             added_refuel = self.model(
                 user_id=id_user,
                 amount_gasoline=amount_gasoline,
@@ -75,7 +75,7 @@ class RefuelingORM(BaseOrm):
                 cost_refueling=cost_refueling,
                 price_gasoline=price_gasoline
             )
-            await session.add(added_refuel)
+            session.add(added_refuel)
             await session.commit()
 
     async def get_refuels(self, id_telegram: int) -> list[RefuelingTable]:
