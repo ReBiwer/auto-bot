@@ -22,7 +22,7 @@ class MyMiddleware(BaseMiddleware):
         else:
             username = event.from_user.username
             name = event.from_user.first_name
-            user_db.add_user(username=username, name=name, id_telegram=tg_id_user)
+            await user_db.add_user(username=username, name=name, id_telegram=tg_id_user)
             user: UserTable = await user_db.get_user(tg_id_user)
             data["user_table"] = user
             return await handler(event, data)
