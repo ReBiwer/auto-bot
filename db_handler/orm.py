@@ -11,7 +11,7 @@ class BaseOrm:
     def __init__(self):
         self.engine = create_engine(
             url=settings.DATABASE_URL_psycopg,
-            # echo=True,
+            echo=True,
         )
         self.async_engine = create_async_engine(
             url=settings.DATABASE_URL_asyncpg,
@@ -29,23 +29,23 @@ class UserORM(BaseOrm):
         super().__init__()
         self.model = UserTable
 
-    def add_user(self, username: str, name: str, id_telegram: int):
+    def add_user(self, username: str, name: str, id_telegram: int) -> None:
         with self.session_factory() as session:
             added_user = self.model(username=username, name=name, id_telegram=id_telegram)
             session.add(added_user)
             session.commit()
 
-    def get_user(self, id_telegram: int):
-        with self.session_factory() as session:
+    async def get_user(self, id_telegram: int) -> UserTable:
+        async with self.async_session_factory() as session:
             query = select(self.model).filter_by(id_telegram=id_telegram)
-            res = session.execute(query)
+            res = await session.execute(query)
             return res.scalars().first()
 
-    def update_name(self, user_id: int, new_name: str):
-        with self.session_factory() as session:
-            query = update(self.model).filter_by(id=user_id).values(name=new_name)
-            session.execute(query)
-            session.commit()
+    async def update_name(self, id_telegram: int, new_name: str) -> None:
+        async with self.session_factory() as session:
+            query = update(self.model).filter_by(id_telegram=id_telegram).values(name=new_name)
+            await session.execute(query)
+            await session.commit()
 
 
 class RefuelingORM(BaseOrm):
@@ -53,15 +53,15 @@ class RefuelingORM(BaseOrm):
         super().__init__()
         self.model = RefuelingTable
 
-    def add_refueling(
+    async def add_refueling(
             self,
             id_user: int,
             amount_gasoline: Decimal,
             mileage: Decimal,
             cost_refueling: Decimal,
             price_gasoline: Decimal
-    ):
-        with self.session_factory() as session:
+    ) -> None:
+        async with self.session_factory() as session:
             added_refuel = self.model(
                 user_id=id_user,
                 amount_gasoline=amount_gasoline,
@@ -69,11 +69,11 @@ class RefuelingORM(BaseOrm):
                 cost_refueling=cost_refueling,
                 price_gasoline=price_gasoline
             )
-            session.add(added_refuel)
-            session.commit()
+            await session.add(added_refuel)
+            await session.commit()
 
-    def get_refuel(self, id_user: int):
-        with self.session_factory() as session:
+    async def get_refuel(self, id_user: int) -> RefuelingTable:
+        async with self.async_session_factory() as session:
             query = select(self.model).where(self.model.user_id == id_user)
-            res = session.execute(query)
-            return res.scalars().all()[0]
+            res = await session.execute(query)
+            return res.scalars().first()
