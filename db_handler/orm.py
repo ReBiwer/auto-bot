@@ -1,10 +1,10 @@
 from decimal import Decimal
-from models import UserTable, Base, RefuelingTable
+from .models import UserTable, Base, RefuelingTable
 
 from sqlalchemy import create_engine, select, update
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
-from config_db import settings
+from .config_db import settings
 
 
 class BaseOrm:
@@ -35,11 +35,11 @@ class UserORM(BaseOrm):
             session.add(added_user)
             session.commit()
 
-    def get_user(self, user_id: int):
+    def get_user(self, id_telegram: int):
         with self.session_factory() as session:
-            query = select(self.model).filter_by(id=user_id)
+            query = select(self.model).filter_by(id_telegram=id_telegram)
             res = session.execute(query)
-            return res.scalars().all()[0]
+            return res.scalars().first()
 
     def update_name(self, user_id: int, new_name: str):
         with self.session_factory() as session:
