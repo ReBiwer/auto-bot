@@ -3,6 +3,7 @@ from create_bot import bot, dp, scheduler
 from handlers.start import start_router
 from handlers.refueling import refuel_router
 from middlewares.user import UserDBMiddleware
+from middlewares.refueling import RefuelsMiddleware
 from aiogram.types import BotCommand, BotCommandScopeDefault
 # from work_time.time_func import send_time_msg
 
@@ -18,9 +19,10 @@ async def main():
     # scheduler.start()
     dp.include_routers(
         start_router,
-        refuel_router
+        refuel_router,
     )
     dp.message.middleware(UserDBMiddleware())
+    dp.callback_query.middleware(UserDBMiddleware())
     await bot.delete_webhook(drop_pending_updates=True)
     await set_commands()
     await dp.start_polling(bot)
