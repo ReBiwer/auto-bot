@@ -82,7 +82,7 @@ class RefuelingORM(BaseOrm):
             session.add(added_refuel)
             await session.commit()
 
-    async def get_refuels(self, id_telegram: int) -> list[RefuelingTable]:
+    async def get_refuels(self, id_telegram: int) -> dict[int,  RefuelingTable]:
         async with self.async_session_factory() as session:
             query = (
                 select(UserTable)
@@ -90,7 +90,9 @@ class RefuelingORM(BaseOrm):
                 .filter_by(id_telegram=id_telegram)
             )
             res = await session.execute(query)
-            return res.scalars().first().refuelings
+        refuels = res.scalars().first().refuelings
+        data = {refueling.id: refueling for refueling in refuels}
+        return data
 
     async def update_refuel(
             self,
