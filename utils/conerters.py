@@ -3,10 +3,14 @@ from decimal import Decimal
 
 
 def convert_to_decimal(value: str):
-    decimal_pattern = r'\d{1,}[\,\.]\d{2}'
+    processed_value = (''.join(filter(lambda x: x.isdigit(), value))
+                       .replace(',', '.')
+                       .replace(' ', '')
+                       .replace('\n', '')
+                       )
+    decimal_pattern = r'\d{1,}.\d{2}'
     re_value = re.search(
         decimal_pattern,
-        value.replace(' ', '')
+        processed_value,
     ).group(0)
-    new_value = re_value.replace(',', '.')
-    return Decimal(new_value)
+    return Decimal(re_value)
