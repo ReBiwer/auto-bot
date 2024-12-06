@@ -6,7 +6,7 @@ from db_handler.orm import UserORM
 from db_handler.models import UserTable
 
 
-class MyMiddleware(BaseMiddleware):
+class UserDBMiddleware(BaseMiddleware):
 
     async def __call__(
             self,
