@@ -1,18 +1,18 @@
 import asyncio
-from create_bot import bot
 from aiogram import Router, F
 from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
-from aiogram.types import Message, ReplyKeyboardRemove, CallbackQuery
+from aiogram.types import Message, CallbackQuery
 from aiogram.utils.chat_action import ChatActionSender
 
+from create_bot import bot
 from keyboards.inline import get_inline_kb_check_data
 from utils.conerters import convert_to_decimal
 from db_handler.models import UserTable
 from db_handler.orm import RefuelingORM
 
-refuel_router = Router()
+add_refuel_router = Router()
 
 
 class Refuel(StatesGroup):
@@ -24,7 +24,7 @@ class Refuel(StatesGroup):
     check_state = State()
 
 
-@refuel_router.message(Command('refueling_add'))
+@add_refuel_router.message(Command('refueling_add'))
 async def add_refueling_start(message: Message, state: FSMContext, user_table: UserTable):
     await state.clear()
     await state.set_state(Refuel.user_id)
@@ -35,7 +35,7 @@ async def add_refueling_start(message: Message, state: FSMContext, user_table: U
     await state.set_state(Refuel.amount_gasoline)
 
 
-@refuel_router.message(Refuel.amount_gasoline)
+@add_refuel_router.message(Refuel.amount_gasoline)
 async def add_refueling_amount(message: Message, state: FSMContext):
     amount_gasoline = convert_to_decimal(message.text)
     await state.update_data(amount_gasoline=amount_gasoline)
@@ -45,7 +45,7 @@ async def add_refueling_amount(message: Message, state: FSMContext):
     await state.set_state(Refuel.mileage)
 
 
-@refuel_router.message(Refuel.mileage)
+@add_refuel_router.message(Refuel.mileage)
 async def add_refueling_mileage(message: Message, state: FSMContext):
     mileage = convert_to_decimal(message.text)
     await state.update_data(mileage=mileage)
@@ -55,7 +55,7 @@ async def add_refueling_mileage(message: Message, state: FSMContext):
     await state.set_state(Refuel.cost_refueling)
 
 
-@refuel_router.message(Refuel.cost_refueling)
+@add_refuel_router.message(Refuel.cost_refueling)
 async def add_refueling_cost(message: Message, state: FSMContext):
     cost_refueling = convert_to_decimal(message.text)
     await state.update_data(cost_refueling=cost_refueling)
@@ -65,7 +65,7 @@ async def add_refueling_cost(message: Message, state: FSMContext):
     await state.set_state(Refuel.price_gasoline)
 
 
-@refuel_router.message(Refuel.price_gasoline)
+@add_refuel_router.message(Refuel.price_gasoline)
 async def add_refueling_price(message: Message, state: FSMContext):
     price_gasoline = convert_to_decimal(message.text)
     await state.update_data(price_gasoline=price_gasoline)
@@ -81,7 +81,7 @@ async def add_refueling_price(message: Message, state: FSMContext):
     await state.set_state(Refuel.check_state)
 
 
-@refuel_router.callback_query(F.data == 'correct', Refuel.check_state)
+@add_refuel_router.callback_query(F.data == 'correct', Refuel.check_state)
 async def add_refueling_correct_data(call: CallbackQuery, state: FSMContext):
     data = await state.get_data()
     refuel = RefuelingORM()
@@ -96,7 +96,7 @@ async def add_refueling_correct_data(call: CallbackQuery, state: FSMContext):
     await call.message.answer('Данные успешно добавлены')
 
 
-@refuel_router.callback_query(F.data == 'incorrect', Refuel.check_state)
+@add_refuel_router.callback_query(F.data == 'incorrect', Refuel.check_state)
 async def add_refueling_incorrect_data(call: CallbackQuery, state: FSMContext):
     async with ChatActionSender.typing(bot=bot, chat_id=call.message.chat.id):
         await asyncio.sleep(2)

@@ -1,7 +1,7 @@
 import asyncio
 from create_bot import bot, dp, scheduler
 from handlers.start import start_router
-from handlers.add_refueling import refuel_router
+from handlers.add_refueling import add_refuel_router
 from middlewares.user import UserDBMiddleware
 from middlewares.refueling import RefuelsMiddleware
 from aiogram.types import BotCommand, BotCommandScopeDefault
@@ -19,7 +19,7 @@ async def main():
     # scheduler.start()
     dp.include_routers(
         start_router,
-        refuel_router,
+        add_refuel_router,
     )
     dp.message.middleware(UserDBMiddleware())
     dp.callback_query.middleware(UserDBMiddleware())
