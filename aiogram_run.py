@@ -2,7 +2,7 @@ import asyncio
 from create_bot import bot, dp, scheduler
 from handlers.start import start_router
 from handlers.add_refueling import add_refuel_router
-from handlers.detail_refuel import detail_refuel_router
+from handlers.detail_refueling import detail_refueling_router
 from middlewares.user import UserDBMiddleware
 from middlewares.refueling import RefuelsMiddleware
 from aiogram.types import BotCommand, BotCommandScopeDefault
@@ -11,7 +11,8 @@ from aiogram.types import BotCommand, BotCommandScopeDefault
 
 async def set_commands():
     commands = [BotCommand(command='start', description='Старт'),
-                BotCommand(command='refueling_add', description='Добавить заправку')]
+                BotCommand(command='add_refueling', description='Добавить заправку'),
+                BotCommand(command='detail_refueling', description='Узнать о своих заправках'),]
     await bot.set_my_commands(commands, BotCommandScopeDefault())
 
 
@@ -21,7 +22,7 @@ async def main():
     dp.include_routers(
         start_router,
         add_refuel_router,
-        detail_refuel_router,
+        detail_refueling_router,
     )
     dp.message.middleware(UserDBMiddleware())
     dp.callback_query.middleware(UserDBMiddleware())

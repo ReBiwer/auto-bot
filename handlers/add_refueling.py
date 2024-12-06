@@ -24,7 +24,7 @@ class Refuel(StatesGroup):
     check_state = State()
 
 
-@add_refuel_router.message(Command('refueling_add'))
+@add_refuel_router.message(Command('add_refueling'))
 async def add_refueling_start(message: Message, state: FSMContext, user_table: UserTable):
     await state.clear()
     await state.set_state(Refuel.user_id)
