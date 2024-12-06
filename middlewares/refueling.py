@@ -15,7 +15,7 @@ class RefuelsMiddleware(BaseMiddleware):
             data: Dict[str, Any]) -> Any:
         tg_id_user = event.from_user.id
         refuel_orm = RefuelingORM()
-        refuels: list[RefuelingTable] = await refuel_orm.get_refuels(tg_id_user)
+        refuels: dict[int, RefuelingTable] = await refuel_orm.get_refuels(tg_id_user)
         if refuels:
             data["refuels"] = refuels
             return await handler(event, data)
