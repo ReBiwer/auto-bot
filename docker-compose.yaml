@@ -3,6 +3,8 @@ services:
   postgres:
     container_name: postgres_container
     image: postgres:16.1-alpine3.18
+    env_file:
+      - .env
     command:
       - "postgres"
       - "-c"
@@ -34,18 +36,18 @@ services:
       - "-c"
       - "pg_stat_statements.track=all"
     environment:
-      POSTGRES_DB: "habrdb"
-      POSTGRES_USER: "habrpguser"
-      POSTGRES_PASSWORD: "pgpwd4habr"
-      PGDATA: "/var/lib/postgresql/data/pgdata"
+      - POSTGRES_DB=${DB_NAME}
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASS}
     ports:
       - "5432:5432"
+    volumes:
+      - ./pg_data/:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U habrpguser -d habrdb"]
+      test: ["CMD-SHELL", "pg_isready -d ${DB_NAME} -U ${DB_USER}"]
       interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 10s
+      timeout: 10s
+      retries: 30
     restart: unless-stopped
     deploy:
       resources:
@@ -54,56 +56,10 @@ services:
           memory: 4G
     networks:
       - postgres
-  app:
-    container_name: app-bot
-    build:
-      dockerfile: ./Dockerfile
-    command:
-      - python
-      - aiogram_run.py
-  redis:
-    image: redis:latest
-    container_name: redis_container
-    environment:
-      - REDIS_PASSWORD=${REDIS_PASSWORD}
-      - REDIS_USER=${REDIS_USER}
-      - REDIS_USER_PASSWORD=${REDIS_USER_PASSWORD}
-    ports:
-      - "6380:6379"
-    volumes:
-      - ./redisdata:/data
-    deploy:
-      resources:
-        limits:
-          cpus: '0.50'
-          memory: 512M
-        reservations:
-          cpus: '0.25'
-          memory: 256M
-    command: >
-      sh -c '
-        mkdir -p /usr/local/etc/redis &&
-        echo "bind 0.0.0.0" > /usr/local/etc/redis/redis.conf &&
-        echo "requirepass $REDIS_PASSWORD" >> /usr/local/etc/redis/redis.conf &&
-        echo "appendonly yes" >> /usr/local/etc/redis/redis.conf &&
-        echo "appendfsync everysec" >> /usr/local/etc/redis/redis.conf &&
-        echo "user default on nopass ~* +@all" > /usr/local/etc/redis/users.acl &&
-        echo "user $REDIS_USER on >$REDIS_USER_PASSWORD ~* +@all" >> /usr/local/etc/redis/users.acl &&
-        redis-server /usr/local/etc/redis/redis.conf --aclfile /usr/local/etc/redis/users.acl
-      '
-    healthcheck:
-      test: [ "CMD", "redis-cli", "-a", "$REDIS_PASSWORD", "ping" ]
-      interval: 30s
-      timeout: 10s
-      retries: 5
-    restart: unless-stopped
-    tty: true
-    stdin_open: true
+networks:
+  postgres:
+    driver: bridge
 
 volumes:
   habrdb-data:
   pgadmin-data:
-
-networks:
-  postgres:
-    driver: bridge
