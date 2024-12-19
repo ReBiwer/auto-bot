@@ -3,7 +3,7 @@ from aiogram.filters import CommandStart
 from aiogram.types import Message
 
 
-from db_handler.models import UserTable
+from app.db_handler.models import UserTable
 
 start_router = Router()
 

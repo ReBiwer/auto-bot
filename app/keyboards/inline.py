@@ -1,4 +1,4 @@
-from db_handler.models import RefuelingTable
+from app.db_handler.models import RefuelingTable
 
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.utils.keyboard import InlineKeyboardBuilder

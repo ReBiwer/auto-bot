@@ -2,9 +2,9 @@ from aiogram import Router, F
 from aiogram.filters import Command
 from aiogram.types import Message, CallbackQuery
 
-from db_handler.models import RefuelingTable
-from middlewares.refueling import RefuelsMiddleware
-from keyboards.inline import get_inline_kb_refuels, get_inline_butt_back
+from app.db_handler.models import RefuelingTable
+from app.middlewares.refueling import RefuelsMiddleware
+from app.keyboards.inline import get_inline_kb_refuels, get_inline_butt_back
 
 detail_refueling_router = Router()
 detail_refueling_router.message.middleware(RefuelsMiddleware())

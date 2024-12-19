@@ -1,10 +1,10 @@
 from decimal import Decimal
-from db_handler.models import UserTable, Base, RefuelingTable
+from app.db_handler.models import UserTable, Base, RefuelingTable
 
 from sqlalchemy import create_engine, select, update, delete
 from sqlalchemy.orm import sessionmaker, selectinload
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
-from db_handler.config_db import settings
+from app.db_handler.config_db import settings
 
 
 class BaseOrm:

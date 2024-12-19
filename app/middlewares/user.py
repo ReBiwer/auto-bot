@@ -2,8 +2,8 @@ from typing import Callable, Dict, Any, Awaitable
 
 from aiogram import BaseMiddleware
 from aiogram.types import Message, CallbackQuery
-from db_handler.orm import UserORM
-from db_handler.models import UserTable
+from app.db_handler.orm import UserORM
+from app.db_handler.models import UserTable
 
 
 class UserDBMiddleware(BaseMiddleware):
