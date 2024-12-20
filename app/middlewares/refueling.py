@@ -2,8 +2,8 @@ from typing import Callable, Dict, Any, Awaitable
 
 from aiogram import BaseMiddleware
 from aiogram.types import Message
-from app.db_handler.orm import RefuelingORM
-from app.db_handler.models import RefuelingTable
+from db_handler.orm import RefuelingORM
+from db_handler.models import RefuelingTable
 
 
 class RefuelsMiddleware(BaseMiddleware):

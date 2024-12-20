@@ -2,8 +2,8 @@ from typing import Callable, Dict, Any, Awaitable
 
 from aiogram import BaseMiddleware
 from aiogram.types import Message, CallbackQuery
-from app.db_handler.orm import UserORM
-from app.db_handler.models import UserTable
+from db_handler.orm import UserORM
+from db_handler.models import UserTable
 
 
 class UserDBMiddleware(BaseMiddleware):
@@ -15,6 +15,7 @@ class UserDBMiddleware(BaseMiddleware):
             data: Dict[str, Any]) -> Any:
         tg_id_user = event.from_user.id
         user_db = UserORM()
+        user_db.create_table()
         user: UserTable = await user_db.get_user(tg_id_user)
         if user:
             data["user_table"] = user

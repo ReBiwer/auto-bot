@@ -6,11 +6,11 @@ from aiogram.fsm.state import State, StatesGroup
 from aiogram.types import Message, CallbackQuery
 from aiogram.utils.chat_action import ChatActionSender
 
-from app.create_bot import bot
-from app.keyboards.inline import get_inline_kb_check_data
-from app.utils.conerters import convert_to_decimal
-from app.db_handler.models import UserTable
-from app.db_handler.orm import RefuelingORM
+from create_bot import bot
+from keyboards.inline import get_inline_kb_check_data
+from utils.conerters import convert_to_decimal
+from db_handler.models import UserTable
+from db_handler.orm import RefuelingORM
 
 add_refuel_router = Router()
 
