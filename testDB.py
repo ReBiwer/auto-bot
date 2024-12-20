@@ -1,7 +1,5 @@
 import asyncio
-from app.db_handler.orm import UserORM, RefuelingORM
-from app.db_handler.models import UserTable, RefuelingTable
-from decimal import Decimal
+from app.db_handler.orm import UserORM
 
 if __name__ == '__main__':
     tg_id_user = 437878719

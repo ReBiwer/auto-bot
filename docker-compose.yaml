@@ -32,6 +32,13 @@ services:
           memory: 4G
     networks:
       - postgres
+  app:
+    container_name: auto_bot
+    build:
+      context: ..
+      dockerfile: Dockerfile
+    volumes:
+      - .:/app
 networks:
   postgres:
     driver: bridge
