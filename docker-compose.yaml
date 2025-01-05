@@ -35,10 +35,12 @@ services:
   app:
     container_name: auto_bot
     build:
-      context: ..
+      context: .
       dockerfile: Dockerfile
     volumes:
       - .:/app
+    networks:
+      - postgres
 networks:
   postgres:
     driver: bridge
