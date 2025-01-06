@@ -31,7 +31,8 @@ services:
           cpus: '1'
           memory: 4G
     networks:
-      - postgres
+      postgres:
+        ipv4_address: 172.18.0.3
   app:
     container_name: auto_bot
     build:
@@ -44,3 +45,7 @@ services:
 networks:
   postgres:
     driver: bridge
+    ipam:
+      config:
+        - subnet: 172.18.0.0/16
+          gateway: 172.18.0.1
