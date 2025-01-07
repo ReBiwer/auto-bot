@@ -3,7 +3,7 @@ from decimal import Decimal
 
 
 def convert_to_decimal(value: str):
-    processed_value = (''.join(filter(lambda x: x.isdigit(), value))
+    processed_value = (value
                        .replace(',', '.')
                        .replace(' ', '')
                        .replace('\n', '')
