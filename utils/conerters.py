@@ -3,6 +3,11 @@ from decimal import Decimal
 
 
 def convert_to_decimal(value: str):
+    """
+    Конвертирует строку в Decimal
+    :param value: строка, где имеется число
+    :return: Decimal число содержащиеся в строке (value)
+    """
     processed_value = (value
                        .replace(',', '.')
                        .replace(' ', '')
