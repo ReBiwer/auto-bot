@@ -7,6 +7,9 @@ from db_handler.models import RefuelingTable
 
 
 class RefuelsMiddleware(BaseMiddleware):
+    """
+    Middleware для получения всех заправок пользователя, если они есть
+    """
 
     async def __call__(
             self,
@@ -18,5 +21,6 @@ class RefuelsMiddleware(BaseMiddleware):
         refuels: dict[int, RefuelingTable] = await refuel_orm.get_refuels(tg_id_user)
         if refuels:
             data["refuels"] = refuels
-            return await handler(event, data)
-
+        else:
+            data["refuels"] = None
+        return await handler(event, data)
