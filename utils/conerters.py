@@ -10,10 +10,9 @@ def convert_to_decimal(value: str):
     """
     processed_value = (value
                        .replace(',', '.')
-                       .replace(' ', '')
                        .replace('\n', '')
                        )
-    decimal_pattern = r'\d{1,}.\d{2}'
+    decimal_pattern = r'\d+\.\d+'
     re_value = re.search(
         decimal_pattern,
         processed_value,
