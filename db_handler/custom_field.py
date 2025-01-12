@@ -14,8 +14,20 @@ created_at = Annotated[datetime.datetime, mapped_column(server_default=text("TIM
 class DecimalField(TypeDecorator):
     impl = String
 
-    def process_bind_param(self, value, dialect):
+    def process_bind_param(self, value, dialect) -> str:
+        """
+        Функция для добавления значения в таблицу
+        :param value: вставляемое значение в таблицу
+        :param dialect: диалект используемой БД
+        :return:
+        """
         return str(value)
 
-    def process_result_value(self, value, dialect):
-        return Decimal(value)
+    def process_result_value(self, value, dialect) -> str:
+        """
+        Функция для получения значения из таблицы
+        :param value: доставаемые данные из таблицы
+        :param dialect: диалект используемой БД
+        :return:
+        """
+        return str(value)
