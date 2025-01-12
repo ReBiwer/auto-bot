@@ -39,31 +39,46 @@ async def add_refueling_start(message: Message, state: FSMContext, user_table: U
 @add_refuel_router.message(Refuel.amount_gasoline)
 async def add_refueling_amount(message: Message, state: FSMContext):
     amount_gasoline = str(convert_to_decimal(message.text))
-    await state.update_data(amount_gasoline=amount_gasoline)
-    async with ChatActionSender.typing(bot=bot, chat_id=message.chat.id):
-        await asyncio.sleep(2)
-        await message.answer('Сколько километров пробег?')
-    await state.set_state(Refuel.mileage)
+    if amount_gasoline:
+        await state.update_data(amount_gasoline=amount_gasoline)
+        async with ChatActionSender.typing(bot=bot, chat_id=message.chat.id):
+            await asyncio.sleep(2)
+            await message.answer('Сколько километров пробег?')
+        await state.set_state(Refuel.mileage)
+    else:
+        async with ChatActionSender.typing(bot=bot, chat_id=message.chat.id):
+            await asyncio.sleep(2)
+            await message.answer('Введите корректное значение')
 
 
 @add_refuel_router.message(Refuel.mileage)
 async def add_refueling_mileage(message: Message, state: FSMContext):
     mileage = str(convert_to_decimal(message.text))
-    await state.update_data(mileage=mileage)
-    async with ChatActionSender.typing(bot=bot, chat_id=message.chat.id):
-        await asyncio.sleep(2)
-        await message.answer('Сколько стоила заправка?')
-    await state.set_state(Refuel.cost_refueling)
+    if mileage:
+        await state.update_data(mileage=mileage)
+        async with ChatActionSender.typing(bot=bot, chat_id=message.chat.id):
+            await asyncio.sleep(2)
+            await message.answer('Сколько стоила заправка?')
+        await state.set_state(Refuel.cost_refueling)
+    else:
+        async with ChatActionSender.typing(bot=bot, chat_id=message.chat.id):
+            await asyncio.sleep(2)
+            await message.answer('Введите корректное значение')
 
 
 @add_refuel_router.message(Refuel.cost_refueling)
 async def add_refueling_cost(message: Message, state: FSMContext):
     cost_refueling = str(convert_to_decimal(message.text))
-    await state.update_data(cost_refueling=cost_refueling)
-    async with ChatActionSender.typing(bot=bot, chat_id=message.chat.id):
-        await asyncio.sleep(2)
-        await message.answer('Какая цена бензина за 1 литр?')
-    await state.set_state(Refuel.price_gasoline)
+    if cost_refueling:
+        await state.update_data(cost_refueling=cost_refueling)
+        async with ChatActionSender.typing(bot=bot, chat_id=message.chat.id):
+            await asyncio.sleep(2)
+            await message.answer('Какая цена бензина за 1 литр?')
+        await state.set_state(Refuel.price_gasoline)
+    else:
+        async with ChatActionSender.typing(bot=bot, chat_id=message.chat.id):
+            await asyncio.sleep(2)
+            await message.answer('Введите корректное значение')
 
 
 @add_refuel_router.message(Refuel.price_gasoline)
@@ -72,10 +87,10 @@ async def add_refueling_price(message: Message, state: FSMContext):
     await state.update_data(price_gasoline=price_gasoline)
     data = await state.get_data()
     check_text = (f'Проверьте введенные данные перед сохранением:\n'
-                  f'<b>Количество заправленного бензина:</b> {data.get('amount_gasoline')}\n'
-                  f'<b>Пробег:</b> {data.get('mileage')}\n'
-                  f'<b>Стоимость заправки:</b> {data.get('cost_refueling')}\n'
-                  f'<b>Цена бензина за 1 литр:</b> {data.get('price_gasoline')}\n')
+                  f'<b>Заправлено:</b> {data.get('amount_gasoline')} л\n'
+                  f'<b>Пробег:</b> {data.get('mileage')} км\n'
+                  f'<b>Стоимость заправки:</b> {data.get('cost_refueling')} руб\n'
+                  f'<b>Цена бензина:</b> {data.get('price_gasoline')} руб/л\n')
     async with ChatActionSender.typing(bot=bot, chat_id=message.chat.id):
         await asyncio.sleep(2)
         await message.answer(check_text, reply_markup=get_inline_kb_check_data())
