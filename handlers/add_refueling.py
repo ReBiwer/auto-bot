@@ -1,4 +1,5 @@
 import asyncio
+from decimal import Decimal
 from aiogram import Router, F
 from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
@@ -37,7 +38,7 @@ async def add_refueling_start(message: Message, state: FSMContext, user_table: U
 
 @add_refuel_router.message(Refuel.amount_gasoline)
 async def add_refueling_amount(message: Message, state: FSMContext):
-    amount_gasoline = convert_to_decimal(message.text)
+    amount_gasoline = str(convert_to_decimal(message.text))
     await state.update_data(amount_gasoline=amount_gasoline)
     async with ChatActionSender.typing(bot=bot, chat_id=message.chat.id):
         await asyncio.sleep(2)
@@ -47,7 +48,7 @@ async def add_refueling_amount(message: Message, state: FSMContext):
 
 @add_refuel_router.message(Refuel.mileage)
 async def add_refueling_mileage(message: Message, state: FSMContext):
-    mileage = convert_to_decimal(message.text)
+    mileage = str(convert_to_decimal(message.text))
     await state.update_data(mileage=mileage)
     async with ChatActionSender.typing(bot=bot, chat_id=message.chat.id):
         await asyncio.sleep(2)
@@ -57,7 +58,7 @@ async def add_refueling_mileage(message: Message, state: FSMContext):
 
 @add_refuel_router.message(Refuel.cost_refueling)
 async def add_refueling_cost(message: Message, state: FSMContext):
-    cost_refueling = convert_to_decimal(message.text)
+    cost_refueling = str(convert_to_decimal(message.text))
     await state.update_data(cost_refueling=cost_refueling)
     async with ChatActionSender.typing(bot=bot, chat_id=message.chat.id):
         await asyncio.sleep(2)
@@ -67,7 +68,7 @@ async def add_refueling_cost(message: Message, state: FSMContext):
 
 @add_refuel_router.message(Refuel.price_gasoline)
 async def add_refueling_price(message: Message, state: FSMContext):
-    price_gasoline = convert_to_decimal(message.text)
+    price_gasoline = str(convert_to_decimal(message.text))
     await state.update_data(price_gasoline=price_gasoline)
     data = await state.get_data()
     check_text = (f'Проверьте введенные данные перед сохранением:\n'
