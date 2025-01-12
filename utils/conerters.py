@@ -2,11 +2,11 @@ import re
 from decimal import Decimal
 
 
-def convert_to_decimal(value: str):
+def search_numbers_in_strings(value: str) -> str | None:
     """
-    Конвертирует строку в Decimal
+    Находит число в строке
     :param value: строка, где имеется число
-    :return: Decimal число содержащиеся в строке (value)
+    :return: str | None: число содержащиеся в строке (value) или None если нет числа
     """
     try:
         processed_value = (value
@@ -18,6 +18,6 @@ def convert_to_decimal(value: str):
             decimal_pattern,
             processed_value,
         ).group(0)
-        return Decimal(re_value)
+        return str(re_value)
     except AttributeError:
         return None
