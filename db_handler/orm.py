@@ -78,18 +78,18 @@ class RefuelingORM(BaseOrm):
     async def add_refueling(
             self,
             id_user: int,
-            amount_gasoline: str | Decimal,
-            mileage: str | Decimal,
-            cost_refueling: str | Decimal,
-            price_gasoline: str | Decimal
+            amount_gasoline: str,
+            mileage: str,
+            cost_refueling: str,
+            price_gasoline: str
     ) -> None:
         async with self.async_session_factory() as session:
             added_refuel = self.model(
                 user_id=id_user,
-                amount_gasoline=Decimal(amount_gasoline),
-                mileage=Decimal(mileage),
-                cost_refueling=Decimal(cost_refueling),
-                price_gasoline=Decimal(price_gasoline),
+                amount_gasoline=amount_gasoline,
+                mileage=mileage,
+                cost_refueling=cost_refueling,
+                price_gasoline=price_gasoline,
             )
             session.add(added_refuel)
             await session.commit()
@@ -110,10 +110,10 @@ class RefuelingORM(BaseOrm):
             self,
             id_refuel: int,
             user_id: int,
-            amount_gasoline: Decimal,
-            mileage: Decimal,
-            cost_refueling: Decimal,
-            price_gasoline: Decimal
+            amount_gasoline: str,
+            mileage: str,
+            cost_refueling: str,
+            price_gasoline: str,
     ) -> None:
         async with self.async_session_factory as session:
             query = update(self.model).values(
