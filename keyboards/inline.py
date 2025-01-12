@@ -16,7 +16,7 @@ def get_inline_kb_refuels(refuels: dict[int, RefuelingTable]) -> InlineKeyboardM
     builder = InlineKeyboardBuilder()
     for id_refuel, refuel in refuels.items():
         builder.row(
-            InlineKeyboardButton(text=f'{refuel.date}',
+            InlineKeyboardButton(text=f'Заправка {refuel.date.strftime('%d.%m.%Y')} числа',
                                  callback_data=f'detail_refuel_{id_refuel}')
         )
     builder.adjust(1)
