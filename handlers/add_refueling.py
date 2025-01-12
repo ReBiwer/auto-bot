@@ -9,7 +9,7 @@ from aiogram.utils.chat_action import ChatActionSender
 
 from create_bot import bot
 from keyboards.inline import get_inline_kb_check_data
-from utils.conerters import convert_to_decimal
+from utils.conerters import search_numbers_in_strings
 from db_handler.models import UserTable
 from db_handler.orm import RefuelingORM
 
@@ -38,7 +38,7 @@ async def add_refueling_start(message: Message, state: FSMContext, user_table: U
 
 @add_refuel_router.message(Refuel.amount_gasoline)
 async def add_refueling_amount(message: Message, state: FSMContext):
-    amount_gasoline = str(convert_to_decimal(message.text))
+    amount_gasoline = search_numbers_in_strings(message.text)
     if amount_gasoline:
         await state.update_data(amount_gasoline=amount_gasoline)
         async with ChatActionSender.typing(bot=bot, chat_id=message.chat.id):
@@ -53,7 +53,7 @@ async def add_refueling_amount(message: Message, state: FSMContext):
 
 @add_refuel_router.message(Refuel.mileage)
 async def add_refueling_mileage(message: Message, state: FSMContext):
-    mileage = str(convert_to_decimal(message.text))
+    mileage = search_numbers_in_strings(message.text)
     if mileage:
         await state.update_data(mileage=mileage)
         async with ChatActionSender.typing(bot=bot, chat_id=message.chat.id):
@@ -68,7 +68,7 @@ async def add_refueling_mileage(message: Message, state: FSMContext):
 
 @add_refuel_router.message(Refuel.cost_refueling)
 async def add_refueling_cost(message: Message, state: FSMContext):
-    cost_refueling = str(convert_to_decimal(message.text))
+    cost_refueling = search_numbers_in_strings(message.text)
     if cost_refueling:
         await state.update_data(cost_refueling=cost_refueling)
         async with ChatActionSender.typing(bot=bot, chat_id=message.chat.id):
@@ -83,7 +83,7 @@ async def add_refueling_cost(message: Message, state: FSMContext):
 
 @add_refuel_router.message(Refuel.price_gasoline)
 async def add_refueling_price(message: Message, state: FSMContext):
-    price_gasoline = str(convert_to_decimal(message.text))
+    price_gasoline = search_numbers_in_strings(message.text)
     await state.update_data(price_gasoline=price_gasoline)
     data = await state.get_data()
     check_text = (f'Проверьте введенные данные перед сохранением:\n'
