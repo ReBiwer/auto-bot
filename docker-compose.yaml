@@ -31,8 +31,26 @@ services:
           cpus: '1'
           memory: 4G
     networks:
-      postgres:
+      my_network:
         ipv4_address: 172.18.0.3
+  redis:
+    image: redis:latest
+    env_file:
+      - .env
+    container_name: redis_container
+    expose:
+      - ${REDIS_PORT}
+    networks:
+      my_network:
+        ipv4_address: 172.18.0.6
+    restart: always
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    volumes:
+      - redis_data:/data
   app:
     container_name: auto_bot
     build:
@@ -41,9 +59,13 @@ services:
     volumes:
       - .:/app
     networks:
-      - postgres
+      - my_network
+
+volumes:
+  redis_data:
+
 networks:
-  postgres:
+  my_network:
     driver: bridge
     ipam:
       config:
