@@ -2,8 +2,8 @@ from typing import Callable, Dict, Any, Awaitable
 
 from aiogram import BaseMiddleware
 from aiogram.types import Message
-from db_handler.orm import RefuelingORM
-from db_handler.models import RefuelingTable
+from db_handler.app_models import RefuelingAppModel
+from db_handler.db_models import RefuelingORM
 
 
 class RefuelsMiddleware(BaseMiddleware):
@@ -17,8 +17,8 @@ class RefuelsMiddleware(BaseMiddleware):
             event: Message,
             data: Dict[str, Any]) -> Any:
         tg_id_user = event.from_user.id
-        refuel_orm = RefuelingORM()
-        refuels: dict[int, RefuelingTable] = await refuel_orm.get_refuels(tg_id_user)
+        refuel_orm = RefuelingAppModel()
+        refuels: dict[int, RefuelingORM] = await refuel_orm.get_refuels(tg_id_user)
         if refuels:
             data["refuels"] = refuels
         else:

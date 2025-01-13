@@ -1,4 +1,4 @@
-from db_handler.models import RefuelingTable
+from db_handler.db_models import RefuelingORM
 
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.utils.keyboard import InlineKeyboardBuilder
@@ -12,7 +12,7 @@ def get_inline_kb_check_data() -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup(inline_keyboard=inline_but)
 
 
-def get_inline_kb_refuels(refuels: dict[int, RefuelingTable]) -> InlineKeyboardMarkup:
+def get_inline_kb_refuels(refuels: dict[int, RefuelingORM]) -> InlineKeyboardMarkup:
     builder = InlineKeyboardBuilder()
     for id_refuel, refuel in refuels.items():
         builder.row(

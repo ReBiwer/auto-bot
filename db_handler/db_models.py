@@ -4,7 +4,7 @@ from sqlalchemy import String, ForeignKey, Column
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
 
-class Base(DeclarativeBase):
+class BaseORM(DeclarativeBase):
     type_annotation_map = {
         str_256: String(256)
     }
@@ -22,7 +22,7 @@ class Base(DeclarativeBase):
         return f"<{self.__class__.__name__} {', '.join(cols)}>"
 
 
-class UserTable(Base):
+class UserORM(BaseORM):
     __tablename__ = 'User'
 
     id: Mapped[pk]
@@ -30,10 +30,10 @@ class UserTable(Base):
     name: Mapped[str_256 | None]
     id_telegram: Mapped[int]
 
-    refuelings: Mapped[list['RefuelingTable']] = relationship(back_populates='user')
+    refuelings: Mapped[list['RefuelingORM']] = relationship(back_populates='user')
 
 
-class RefuelingTable(Base):
+class RefuelingORM(BaseORM):
     __tablename__ = 'Refueling'
 
     id: Mapped[pk]
@@ -44,4 +44,4 @@ class RefuelingTable(Base):
     cost_refueling = Column(DecimalField(50))
     price_gasoline = Column(DecimalField(50))
 
-    user: Mapped["UserTable"] = relationship(back_populates='refuelings')
+    user: Mapped["UserORM"] = relationship(back_populates='refuelings')

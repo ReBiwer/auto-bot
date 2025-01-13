@@ -10,8 +10,8 @@ from aiogram.utils.chat_action import ChatActionSender
 from create_bot import bot
 from keyboards.inline import get_inline_kb_check_data
 from utils.conerters import search_numbers_in_strings
-from db_handler.models import UserTable
-from db_handler.orm import RefuelingORM
+from db_handler.db_models import UserORM
+from db_handler.app_models import RefuelingAppModel
 
 add_refuel_router = Router()
 
@@ -26,7 +26,7 @@ class Refuel(StatesGroup):
 
 
 @add_refuel_router.message(Command('add_refueling'))
-async def add_refueling_start(message: Message, state: FSMContext, user_table: UserTable):
+async def add_refueling_start(message: Message, state: FSMContext, user_table: UserORM):
     await state.clear()
     await state.set_state(Refuel.user_id)
     await state.update_data(user_id=user_table.id)
@@ -100,7 +100,7 @@ async def add_refueling_price(message: Message, state: FSMContext):
 @add_refuel_router.callback_query(F.data == 'correct', Refuel.check_state)
 async def add_refueling_correct_data(call: CallbackQuery, state: FSMContext):
     data = await state.get_data()
-    refuel = RefuelingORM()
+    refuel = RefuelingAppModel()
     await state.clear()
     await refuel.add_refueling(
         id_user=data.get('user_id'),
