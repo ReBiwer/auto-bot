@@ -10,7 +10,7 @@ from aiogram.utils.chat_action import ChatActionSender
 from create_bot import bot
 from keyboards.inline import get_inline_kb_check_data
 from utils.conerters import search_numbers_in_strings
-from db_settings.db_models import UserORM
+from db_settings.db_models import User
 from db_settings.app_models import RefuelingAppModel
 
 add_refuel_router = Router()
@@ -26,7 +26,7 @@ class Refuel(StatesGroup):
 
 
 @add_refuel_router.message(Command('add_refueling'))
-async def add_refueling_start(message: Message, state: FSMContext, user_table: UserORM):
+async def add_refueling_start(message: Message, state: FSMContext, user_table: User):
     await state.clear()
     await state.set_state(Refuel.user_id)
     await state.update_data(user_id=user_table.id)

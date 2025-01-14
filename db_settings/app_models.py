@@ -1,5 +1,5 @@
 from decimal import Decimal
-from db_settings.db_models import UserORM, BaseORM, RefuelingORM
+from db_settings.db_models import User, BaseORM, Refueling
 
 from sqlalchemy import create_engine, select, update, delete, exists
 from sqlalchemy.orm import sessionmaker, selectinload
@@ -27,7 +27,7 @@ class BaseAppModel:
 class UserAppModel(BaseAppModel):
     def __init__(self):
         super().__init__()
-        self.model = UserORM
+        self.model = User
 
     async def check_user(self, id_telegram: int) -> bool:
         async with self.async_session_factory() as session:
@@ -44,7 +44,7 @@ class UserAppModel(BaseAppModel):
                 await session.commit()
             return check_user
 
-    async def get_user(self, id_telegram: int) -> UserORM | bool:
+    async def get_user(self, id_telegram: int) -> User | bool:
         async with self.async_session_factory() as session:
             query = select(self.model).filter_by(id_telegram=id_telegram)
             check_user = await self.check_user(id_telegram)
@@ -73,7 +73,7 @@ class UserAppModel(BaseAppModel):
 class RefuelingAppModel(BaseAppModel):
     def __init__(self):
         super().__init__()
-        self.model = RefuelingORM
+        self.model = Refueling
 
     async def add_refueling(
             self,
@@ -94,11 +94,11 @@ class RefuelingAppModel(BaseAppModel):
             session.add(added_refuel)
             await session.commit()
 
-    async def get_refuels(self, id_telegram: int) -> dict[int,  RefuelingORM]:
+    async def get_refuels(self, id_telegram: int) -> dict[int,  Refueling]:
         async with self.async_session_factory() as session:
             query = (
-                select(UserORM)
-                .options(selectinload(UserORM.refuelings))
+                select(User)
+                .options(selectinload(User.refuelings))
                 .filter_by(id_telegram=id_telegram)
             )
             res = await session.execute(query)
