@@ -1,4 +1,4 @@
-from db_handler.custom_field import str_256, pk, created_at, DecimalField
+from db_settings.custom_field import str_256, pk, created_at, DecimalField
 
 from sqlalchemy import String, ForeignKey, Column
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship

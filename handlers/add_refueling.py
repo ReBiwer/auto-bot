@@ -10,8 +10,8 @@ from aiogram.utils.chat_action import ChatActionSender
 from create_bot import bot
 from keyboards.inline import get_inline_kb_check_data
 from utils.conerters import search_numbers_in_strings
-from db_handler.db_models import UserORM
-from db_handler.app_models import RefuelingAppModel
+from db_settings.db_models import UserORM
+from db_settings.app_models import RefuelingAppModel
 
 add_refuel_router = Router()
 

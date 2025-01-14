@@ -4,7 +4,7 @@ from aiogram.fsm.context import FSMContext
 from aiogram.types import Message
 
 
-from db_handler.db_models import UserORM
+from db_settings.db_models import UserORM
 
 start_router = Router()
 

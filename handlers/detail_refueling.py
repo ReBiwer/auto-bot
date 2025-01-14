@@ -2,7 +2,7 @@ from aiogram import Router, F
 from aiogram.filters import Command
 from aiogram.types import Message, CallbackQuery
 
-from db_handler.db_models import RefuelingORM
+from db_settings.db_models import RefuelingORM
 from middlewares.refueling import RefuelsMiddleware
 from keyboards.inline import get_inline_kb_refuels, get_inline_butt_back
 

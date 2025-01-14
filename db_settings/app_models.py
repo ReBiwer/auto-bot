@@ -1,10 +1,10 @@
 from decimal import Decimal
-from db_handler.db_models import UserORM, BaseORM, RefuelingORM
+from db_settings.db_models import UserORM, BaseORM, RefuelingORM
 
 from sqlalchemy import create_engine, select, update, delete, exists
 from sqlalchemy.orm import sessionmaker, selectinload
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
-from db_handler.config_db import settings
+from db_settings.config_db import settings
 
 
 class BaseAppModel:
