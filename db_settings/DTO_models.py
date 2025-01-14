@@ -1,5 +1,6 @@
 from datetime import datetime
 from typing import Optional
+from decimal import Decimal
 
 from pydantic import BaseModel, ConfigDict
 
@@ -18,7 +19,6 @@ class UserGetDTO(UserAddDTO):
     Класс для валидации данных при извлечении данных
     """
     id: int
-    refuelings: list["RefuelAddDTO"]
 
 
 class RefuelAddDTO(BaseModel):
@@ -32,10 +32,15 @@ class RefuelAddDTO(BaseModel):
     price_gasoline: str
 
 
-class RefuelGetDTO(RefuelAddDTO):
+class RefuelGetDTO(BaseModel):
     """
     Класс для валидации данных при извлечении данных
     """
     id: int
     date: datetime
+    user_id: int
+    amount_gasoline: Decimal
+    mileage: Decimal
+    cost_refueling: Decimal
+    price_gasoline: Decimal
     user: UserGetDTO
