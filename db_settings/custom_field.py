@@ -23,11 +23,11 @@ class DecimalField(TypeDecorator):
         """
         return str(value)
 
-    def process_result_value(self, value, dialect) -> str:
+    def process_result_value(self, value, dialect) -> Decimal:
         """
         Функция для получения значения из таблицы
         :param value: доставаемые данные из таблицы
         :param dialect: диалект используемой БД
         :return:
         """
-        return str(value)
+        return Decimal(value)
