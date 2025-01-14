@@ -1,16 +1,22 @@
 from db_settings.custom_field import str_256, pk, created_at, DecimalField
 
 from sqlalchemy import String, ForeignKey, Column
-from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship, declared_attr
+from sqlalchemy.ext.asyncio import AsyncAttrs
 
 
-class BaseORM(DeclarativeBase):
+class Base(AsyncAttrs, DeclarativeBase):
+    __abstract__ = True
     type_annotation_map = {
         str_256: String(256)
     }
 
     repr_cols_num = 3
     repr_cols = tuple()
+
+    @declared_attr.directive
+    def __tablename__(cls) -> str:
+        return cls.__name__.lower() + 's'
 
     def __repr__(self):
         """Relationships не используются в repr(), т.к. могут вести к неожиданным подгрузкам"""
@@ -22,19 +28,17 @@ class BaseORM(DeclarativeBase):
         return f"<{self.__class__.__name__} {', '.join(cols)}>"
 
 
-class UserORM(BaseORM):
-    __tablename__ = 'User'
+class User(Base):
 
     id: Mapped[pk]
     username: Mapped[str]
     name: Mapped[str_256 | None]
     id_telegram: Mapped[int]
 
-    refuelings: Mapped[list['RefuelingORM']] = relationship(back_populates='user')
+    refuelings: Mapped[list['Refueling']] = relationship(back_populates='user')
 
 
-class RefuelingORM(BaseORM):
-    __tablename__ = 'Refueling'
+class Refueling(Base):
 
     id: Mapped[pk]
     user_id: Mapped[int] = mapped_column(ForeignKey("User.id", ondelete="CASCADE"))
@@ -44,4 +48,4 @@ class RefuelingORM(BaseORM):
     cost_refueling = Column(DecimalField(50))
     price_gasoline = Column(DecimalField(50))
 
-    user: Mapped["UserORM"] = relationship(back_populates='refuelings')
+    user: Mapped["User"] = relationship(back_populates='refuelings')

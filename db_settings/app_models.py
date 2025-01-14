@@ -1,5 +1,5 @@
 from decimal import Decimal
-from db_settings.db_models import User, BaseORM, Refueling
+from db_settings.db_models import User, Base, Refueling
 
 from sqlalchemy import create_engine, select, update, delete, exists
 from sqlalchemy.orm import sessionmaker, selectinload
@@ -21,7 +21,7 @@ class BaseAppModel:
         self.async_session_factory = async_sessionmaker(self.async_engine)
 
     def create_table(self):
-        BaseORM.metadata.create_all(self.engine)
+        Base.metadata.create_all(self.engine)
 
 
 class UserAppModel(BaseAppModel):
