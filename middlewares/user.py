@@ -15,7 +15,6 @@ class UserDBMiddleware(BaseMiddleware):
             data: Dict[str, Any]) -> Any:
         tg_id_user = event.from_user.id
         user_db = UserAppModel()
-        user_db.create_table()
         user: User = await user_db.get_user(tg_id_user)
         if user:
             data["user_table"] = user
