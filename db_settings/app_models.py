@@ -1,8 +1,9 @@
 from decimal import Decimal
 from db_settings.db_models import User, Base, Refueling
+from db_settings.DTO_models import RefuelGetDTO
 
 from sqlalchemy import create_engine, select, update, delete, exists
-from sqlalchemy.orm import sessionmaker, selectinload
+from sqlalchemy.orm import sessionmaker, selectinload, join, contains_eager
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
 from db_settings.config_db import settings
 
@@ -19,9 +20,6 @@ class BaseAppModel:
         )
         self.session_factory = sessionmaker(self.engine)
         self.async_session_factory = async_sessionmaker(self.async_engine)
-
-    def create_table(self):
-        Base.metadata.create_all(self.engine)
 
 
 class UserAppModel(BaseAppModel):
@@ -94,17 +92,19 @@ class RefuelingAppModel(BaseAppModel):
             session.add(added_refuel)
             await session.commit()
 
-    async def get_refuels(self, id_telegram: int) -> dict[int,  Refueling]:
+    async def get_refuels(self, id_telegram: int) -> list[RefuelGetDTO]:
         async with self.async_session_factory() as session:
             query = (
-                select(User)
-                .options(selectinload(User.refuelings))
-                .filter_by(id_telegram=id_telegram)
+                select(Refueling)
+                .join(Refueling.user)
+                .options(contains_eager(Refueling.user))
+                .filter(User.id_telegram == id_telegram)
             )
             res = await session.execute(query)
-        refuels = res.scalars().first().refuelings
-        data = {refueling.id: refueling for refueling in refuels}
-        return data
+            refuels = res.unique().scalars().all()
+            refuels_dto = [RefuelGetDTO.model_validate(row, from_attributes=True)
+                           for row in refuels]
+        return refuels_dto
 
     async def update_refuel(
             self,
