@@ -12,6 +12,7 @@ from keyboards.inline import get_inline_kb_check_data
 from utils.conerters import search_numbers_in_strings
 from db_settings.db_models import User
 from db_settings.app_models import RefuelingAppModel
+from db_settings.DTO_models import UserGetDTO, RefuelChangeDTO
 
 add_refuel_router = Router()
 
@@ -26,10 +27,10 @@ class Refuel(StatesGroup):
 
 
 @add_refuel_router.message(Command('add_refueling'))
-async def add_refueling_start(message: Message, state: FSMContext, user_table: User):
+async def add_refueling_start(message: Message, state: FSMContext, user: UserGetDTO):
     await state.clear()
     await state.set_state(Refuel.user_id)
-    await state.update_data(user_id=user_table.id)
+    await state.update_data(user_id=user.id)
     async with ChatActionSender.typing(bot=bot, chat_id=message.chat.id):
         await asyncio.sleep(2)
         await message.answer('Сколько литров заправили?')
@@ -102,13 +103,15 @@ async def add_refueling_correct_data(call: CallbackQuery, state: FSMContext):
     data = await state.get_data()
     refuel = RefuelingAppModel()
     await state.clear()
-    await refuel.add_refueling(
-        id_user=data.get('user_id'),
-        amount_gasoline=data.get('amount_gasoline'),
-        mileage=data.get('mileage'),
-        cost_refueling=data.get('cost_refueling'),
-        price_gasoline=data.get('price_gasoline')
-    )
+    refuel_data = {
+        'user_id': data.get('user_id'),
+        'amount_gasoline': data.get('amount_gasoline'),
+        'mileage': data.get('mileage'),
+        'cost_refueling': data.get('cost_refueling'),
+        'price_gasoline': data.get('price_gasoline'),
+    }
+    refuel_dto = RefuelChangeDTO(**refuel_data)
+    await refuel.add_refueling(refuel_dto)
     await call.message.answer('Данные успешно добавлены')
 
 
