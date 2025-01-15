@@ -5,7 +5,7 @@ from decimal import Decimal
 from pydantic import BaseModel, ConfigDict
 
 
-class UserAddDTO(BaseModel):
+class UserChangeDTO(BaseModel):
     """
     Класс для валидации данных при добавлении пользователя
     """
@@ -14,17 +14,18 @@ class UserAddDTO(BaseModel):
     id_telegram: int
 
 
-class UserGetDTO(UserAddDTO):
+class UserGetDTO(UserChangeDTO):
     """
     Класс для валидации данных при извлечении данных
     """
     id: int
 
 
-class RefuelAddDTO(BaseModel):
+class RefuelChangeDTO(BaseModel):
     """
     Класс для валидации данных при добавлении заправки
     """
+    id: int
     user_id: int
     amount_gasoline: str
     mileage: str
