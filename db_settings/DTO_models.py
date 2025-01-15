@@ -25,7 +25,7 @@ class RefuelChangeDTO(BaseModel):
     """
     Класс для валидации данных при добавлении заправки
     """
-    id: int
+    id: int | None
     user_id: int
     amount_gasoline: str
     mileage: str
