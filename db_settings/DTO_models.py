@@ -1,8 +1,9 @@
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Any
 from decimal import Decimal
+from typing_extensions import Self
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, field_validator
 
 
 class UserChangeDTO(BaseModel):
@@ -31,6 +32,22 @@ class RefuelChangeDTO(BaseModel):
     mileage: str
     cost_refueling: str
     price_gasoline: str
+
+    @field_validator('amount_gasoline', mode='before')
+    def validate_amount_gasoline(cls, value):
+        return str(value)
+
+    @field_validator('mileage', mode='before')
+    def validate_mileage(cls, value):
+        return str(value)
+
+    @field_validator('cost_refueling', mode='before')
+    def validate_cost_refueling(cls, value):
+        return str(value)
+
+    @field_validator('price_gasoline', mode='before')
+    def validate_price_gasoline(cls, value):
+        return str(value)
 
 
 class RefuelGetDTO(BaseModel):
