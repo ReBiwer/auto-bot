@@ -31,10 +31,10 @@ def get_inline_kb_refuels(refuels: dict[int, RefuelGetDTO], changed_buttons: boo
 
 def inline_choose_changed_parameters_refueling():
     inline_but = [
-        [InlineKeyboardButton(text='Количество бензина', callback_data='change_amount_gasoline')],
-        [InlineKeyboardButton(text='Пробег', callback_data='change_mileage')],
-        [InlineKeyboardButton(text='Стоимость заправки', callback_data='change_cost_refueling')],
-        [InlineKeyboardButton(text='Цена за литр бензина', callback_data='change_price_gasoline')],
+        [InlineKeyboardButton(text='Количество бензина', callback_data='update_amount_gasoline')],
+        [InlineKeyboardButton(text='Пробег', callback_data='update_mileage')],
+        [InlineKeyboardButton(text='Стоимость заправки', callback_data='update_cost_refueling')],
+        [InlineKeyboardButton(text='Цена за литр бензина', callback_data='update_price_gasoline')],
     ]
     return InlineKeyboardMarkup(inline_keyboard=inline_but)
 

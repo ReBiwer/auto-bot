@@ -69,7 +69,7 @@ class UserAppModel(BaseAppModel):
             await session.commit()
 
     async def delete_user(self, id_user: int) -> None:
-        async with self.async_session_factory as session:
+        async with self.async_session_factory() as session:
             query = delete(self.model).filter_by(id=id_user)
             await session.execute(query)
             await session.commit()
@@ -107,20 +107,23 @@ class RefuelingAppModel(BaseAppModel):
         return refuels_dto
 
     async def update_refuel(self, refuel: RefuelChangeDTO) -> None:
-        async with self.async_session_factory as session:
-            query = update(self.model).values(
-                id_refuel=refuel.id,
-                user_id=refuel.user_id,
-                amount_gasoline=refuel.amount_gasoline,
-                mileage=refuel.mileage,
-                cost_refueling=refuel.cost_refueling,
-                price_gasoline=refuel.price_gasoline,
+        async with self.async_session_factory() as session:
+            query = (
+                update(self.model).
+                filter_by(id=refuel.id).
+                values(
+                    user_id=refuel.user_id,
+                    amount_gasoline=refuel.amount_gasoline,
+                    mileage=refuel.mileage,
+                    cost_refueling=refuel.cost_refueling,
+                    price_gasoline=refuel.price_gasoline,
+                )
             )
             await session.execute(query)
             await session.commit()
 
     async def delete_refuel(self, id_refuel: int) -> None:
-        async with self.async_session_factory as session:
+        async with self.async_session_factory() as session:
             query = delete(self.model).filter_by(id=id_refuel)
             await session.execute(query)
             await session.commit()
