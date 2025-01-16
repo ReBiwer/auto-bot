@@ -12,7 +12,7 @@ start_router.message.middleware(UserDBMiddleware())
 
 @start_router.message(CommandStart())
 async def start(message: Message, state: FSMContext):
-    await state.clear()
+    await state.set_state()
     await message.answer('Приветствую. \n'
                          'Я бот Быкова Владимир.\n'
                          'Создан для личных нужд создателя.\n'
