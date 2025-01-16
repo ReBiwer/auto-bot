@@ -8,6 +8,7 @@ from aiogram.types import Message, CallbackQuery
 from aiogram.utils.chat_action import ChatActionSender
 
 from create_bot import bot
+from middlewares.user import UserDBMiddleware
 from keyboards.inline import get_inline_kb_check_data
 from utils.conerters import search_numbers_in_strings
 from db_settings.db_models import User
@@ -15,6 +16,7 @@ from db_settings.app_models import RefuelingAppModel
 from db_settings.DTO_models import UserGetDTO, RefuelChangeDTO
 
 add_refuel_router = Router()
+add_refuel_router.message.middleware(UserDBMiddleware())
 
 
 class Refuel(StatesGroup):
