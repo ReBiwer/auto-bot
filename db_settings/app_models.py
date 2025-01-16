@@ -92,7 +92,7 @@ class RefuelingAppModel(BaseAppModel):
             session.add(added_refuel)
             await session.commit()
 
-    async def get_refuels(self, id_telegram: int) -> list[RefuelGetDTO]:
+    async def get_refuels(self, id_telegram: int) -> dict[int, RefuelGetDTO]:
         async with self.async_session_factory() as session:
             query = (
                 select(Refueling)
@@ -102,8 +102,8 @@ class RefuelingAppModel(BaseAppModel):
             )
             res = await session.execute(query)
             refuels = res.unique().scalars().all()
-            refuels_dto = [RefuelGetDTO.model_validate(row, from_attributes=True)
-                           for row in refuels]
+            refuels_dto = {row.id: RefuelGetDTO.model_validate(row, from_attributes=True)
+                           for row in refuels}
         return refuels_dto
 
     async def update_refuel(self, refuel: RefuelChangeDTO) -> None:
