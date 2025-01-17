@@ -2,8 +2,8 @@ from typing import Callable, Dict, Any, Awaitable
 
 from aiogram import BaseMiddleware
 from aiogram.types import Message, CallbackQuery
+from aiogram.fsm.context import FSMContext
 from db_settings.app_models import UserAppModel
-from db_settings.db_models import User
 from db_settings.DTO_models import UserChangeDTO, UserGetDTO
 
 
@@ -15,7 +15,9 @@ class UserDBMiddleware(BaseMiddleware):
             event: Message | CallbackQuery,
             data: Dict[str, Any]) -> Any:
         tg_id_user = event.from_user.id
-        if 'user' in data:
+        state: FSMContext = data['state']
+        state_data = await state.get_data()
+        if 'user' in state_data:
             return await handler(event, data)
         else:
             user_db = UserAppModel()
@@ -26,5 +28,8 @@ class UserDBMiddleware(BaseMiddleware):
             }
             user = UserChangeDTO(**user_data)
             await user_db.add_user(user)
-            data["user"] = user
+            info_user: UserGetDTO = await user_db.get_user(tg_id_user)
+            await state.set_data(
+                {'user': info_user.model_dump_json()}
+            )
             return await handler(event, data)
