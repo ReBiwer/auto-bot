@@ -12,9 +12,12 @@ detail_refueling_router.callback_query.middleware(RefuelsMiddleware())
 
 
 @detail_refueling_router.message(Command('detail_refueling'))
-async def get_all_refuels(message: Message, refuels: dict[int, RefuelGetDTO]):
-    await message.answer(text='Выберите заправку. Ниже указана дата заправки',
-                         reply_markup=get_inline_kb_refuels(refuels))
+async def get_all_refuels(message: Message, refuels: dict[int, RefuelGetDTO] | None):
+    if refuels:
+        await message.answer(text='Выберите заправку. Ниже указана дата заправки',
+                             reply_markup=get_inline_kb_refuels(refuels))
+    else:
+        await message.answer(text='У вас пока нет заправок')
 
 
 @detail_refueling_router.callback_query(F.data.startswith('detail_refuel_'))
