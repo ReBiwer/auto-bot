@@ -39,6 +39,7 @@ async def confirm_delete_refuel(call: CallbackQuery, state: FSMContext):
     data_from_state = await state.get_data()
     refuel_id = int(call.data.replace('delete_refuel_', ''))
     await state.set_data({'refuel_id':  refuel_id})
+    await state.set_state(DeleteRefuel.confirmation)
     refuel_json = data_from_state['refuels'][str(refuel_id)]
     info_delete_refuel: RefuelGetDTO = RefuelGetDTO.model_validate_json(refuel_json)
     async with ChatActionSender.typing(bot=bot, chat_id=call.message.chat.id):
@@ -50,7 +51,7 @@ async def confirm_delete_refuel(call: CallbackQuery, state: FSMContext):
                                        f'Стоимость заправки: {info_delete_refuel.cost_refueling}\n'
                                        f'Цена за 1 литр: {info_delete_refuel.price_gasoline}\n',
                                   reply_markup=inline_confirm_buttons())
-        
+
         
 @delete_refueling_router.callback_query(F.data == 'confirm', DeleteRefuel.confirmation)
 async def delete_refuel(call: CallbackQuery, state: FSMContext):
