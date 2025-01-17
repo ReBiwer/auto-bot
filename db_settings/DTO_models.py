@@ -62,3 +62,7 @@ class RefuelGetDTO(BaseModel):
     cost_refueling: Decimal
     price_gasoline: Decimal
     user: UserGetDTO
+
+    @property
+    def formated_date(self):
+        return self.date.strftime('%d.%m.%Y')
