@@ -46,7 +46,7 @@ async def get_all_refuels(message: Message, state: FSMContext, refuels: dict[int
         await state.set_state(ChangeRefuel.refuels)
         await state.update_data(refuels=serialized_refuels)
         await message.answer(text='Какую заправку вы хотите изменить?',
-                             reply_markup=get_inline_kb_refuels(refuels, changed_buttons=True))
+                             reply_markup=get_inline_kb_refuels(refuels, change_buttons=True))
     else:
         await message.answer(text='У вас пока нет заправок')
 
