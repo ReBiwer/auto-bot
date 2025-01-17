@@ -12,21 +12,34 @@ def get_inline_kb_check_data() -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup(inline_keyboard=inline_but)
 
 
-def get_inline_kb_refuels(refuels: dict[int, RefuelGetDTO], changed_buttons: bool = False) -> InlineKeyboardMarkup:
+def get_inline_kb_refuels(
+        refuels: dict[int, RefuelGetDTO],
+        change_buttons: bool = False, delete_buttons: bool = False) -> InlineKeyboardMarkup:
     builder = InlineKeyboardBuilder()
     for id_refuel, refuel in refuels.items():
-        if changed_buttons:
-            builder.row(
-                InlineKeyboardButton(text=f'Заправка {refuel.date.strftime('%d.%m.%Y')} числа',
-                                     callback_data=f'change_refuel_{id_refuel}')
-            )
+        if change_buttons and not delete_buttons:
+            callback_data = f'change_refuel_{id_refuel}'
+        elif delete_buttons and not change_buttons:
+            callback_data = f'delete_refuel_{id_refuel}'
+        elif not change_buttons and not delete_buttons:
+            callback_data = f'detail_refuel_{id_refuel}'
         else:
-            builder.row(
-                InlineKeyboardButton(text=f'Заправка {refuel.date.strftime('%d.%m.%Y')} числа',
-                                     callback_data=f'detail_refuel_{id_refuel}')
-            )
+            raise ValueError(f'В функцию нужно передать только один из аргументов change_buttons и delete_buttons. '
+                             f'Текущие аргументы: {change_buttons=}, {delete_buttons=}')
+        builder.row(
+            InlineKeyboardButton(text=f'Заправка {refuel.formated_date} числа',
+                                 callback_data=callback_data)
+        )
     builder.adjust(1)
     return builder.as_markup()
+
+
+def inline_confirm_buttons():
+    inline_but = [
+        [InlineKeyboardButton(text='Подтверждаю', callback_data='confirm')],
+        [InlineKeyboardButton(text='Не подтверждаю', callback_data='not_confirm')],
+    ]
+    return InlineKeyboardMarkup(inline_keyboard=inline_but)
 
 
 def inline_choose_changed_parameters_refueling():
