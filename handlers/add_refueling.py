@@ -1,5 +1,4 @@
 import asyncio
-from decimal import Decimal
 from aiogram import Router, F
 from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
@@ -8,15 +7,13 @@ from aiogram.types import Message, CallbackQuery
 from aiogram.utils.chat_action import ChatActionSender
 
 from create_bot import bot
-from middlewares.user import UserDBMiddleware
 from keyboards.inline import get_inline_kb_check_data
 from utils.conerters import search_numbers_in_strings
-from db_settings.db_models import User
 from db_settings.app_models import RefuelingAppModel
 from db_settings.DTO_models import UserGetDTO, RefuelChangeDTO
+from utils.extract_user_data import get_user_info
 
 add_refuel_router = Router()
-add_refuel_router.message.middleware(UserDBMiddleware())
 
 
 class Refuel(StatesGroup):
@@ -29,9 +26,9 @@ class Refuel(StatesGroup):
 
 
 @add_refuel_router.message(Command('add_refueling'))
-async def add_refueling_start(message: Message, state: FSMContext, user: UserGetDTO):
-    await state.clear()
+async def add_refueling_start(message: Message, state: FSMContext):
     await state.set_state(Refuel.user_id)
+    user = await get_user_info(state)
     await state.update_data(user_id=user.id)
     async with ChatActionSender.typing(bot=bot, chat_id=message.chat.id):
         await asyncio.sleep(2)
