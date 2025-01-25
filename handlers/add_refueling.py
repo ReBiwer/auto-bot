@@ -27,6 +27,12 @@ class Refuel(StatesGroup):
 
 @add_refuel_router.message(Command('add_refueling'))
 async def add_refueling_start(message: Message, state: FSMContext):
+    """
+    Стартовый хэндлер, где начинается сбор данных заправки для добавления
+    :param message: сообщение
+    :param state: состояние, где сохраняются все данные заправки
+    :return:
+    """
     await state.set_state(Refuel.user_id)
     user = await get_user_info(state)
     await state.update_data(user_id=user.id)
@@ -38,6 +44,12 @@ async def add_refueling_start(message: Message, state: FSMContext):
 
 @add_refuel_router.message(Refuel.amount_gasoline)
 async def add_refueling_amount(message: Message, state: FSMContext):
+    """
+    Хэндлер, где сохраняется кол-во заправленного бензина и запрашивается пробег
+    :param message:
+    :param state:
+    :return:
+    """
     amount_gasoline = search_numbers_in_strings(message.text)
     if amount_gasoline:
         await state.update_data(amount_gasoline=amount_gasoline)
@@ -53,6 +65,12 @@ async def add_refueling_amount(message: Message, state: FSMContext):
 
 @add_refuel_router.message(Refuel.mileage)
 async def add_refueling_mileage(message: Message, state: FSMContext):
+    """
+    Хэндлер, где сохраняется пробег и запрашивается стоимость заправки
+    :param message:
+    :param state:
+    :return:
+    """
     mileage = search_numbers_in_strings(message.text)
     if mileage:
         await state.update_data(mileage=mileage)
@@ -68,6 +86,12 @@ async def add_refueling_mileage(message: Message, state: FSMContext):
 
 @add_refuel_router.message(Refuel.cost_refueling)
 async def add_refueling_cost(message: Message, state: FSMContext):
+    """
+    Хэндлер, где сохраняется кол-во стоимость заправки и запрашивается цена за 1 литр бензина
+    :param message:
+    :param state:
+    :return:
+    """
     cost_refueling = search_numbers_in_strings(message.text)
     if cost_refueling:
         await state.update_data(cost_refueling=cost_refueling)
@@ -83,6 +107,12 @@ async def add_refueling_cost(message: Message, state: FSMContext):
 
 @add_refuel_router.message(Refuel.price_gasoline)
 async def add_refueling_price(message: Message, state: FSMContext):
+    """
+    Хэндлер, где сохраняется цена за 1 литр бензина и запрашивается подтверждение полученных данных
+    :param message:
+    :param state:
+    :return:
+    """
     price_gasoline = search_numbers_in_strings(message.text)
     await state.update_data(price_gasoline=price_gasoline)
     data = await state.get_data()
@@ -99,9 +129,15 @@ async def add_refueling_price(message: Message, state: FSMContext):
 
 @add_refuel_router.callback_query(F.data == 'correct', Refuel.check_state)
 async def add_refueling_correct_data(call: CallbackQuery, state: FSMContext):
+    """
+    Хэндлер, где сохраняется заправка в БД
+    :param call:
+    :param state:
+    :return:
+    """
     data = await state.get_data()
     refuel = RefuelingAppModel()
-    await state.clear()
+    await state.set_state()
     refuel_data = {
         'user_id': data.get('user_id'),
         'amount_gasoline': data.get('amount_gasoline'),
@@ -116,6 +152,12 @@ async def add_refueling_correct_data(call: CallbackQuery, state: FSMContext):
 
 @add_refuel_router.callback_query(F.data == 'incorrect', Refuel.check_state)
 async def add_refueling_incorrect_data(call: CallbackQuery, state: FSMContext):
+    """
+    Хэндлер, где происходит повторный сбор данных
+    :param call:
+    :param state:
+    :return:
+    """
     async with ChatActionSender.typing(bot=bot, chat_id=call.message.chat.id):
         await asyncio.sleep(2)
         await call.message.answer('Заполните заново.\nСколько литров заправили?')
