@@ -2,6 +2,7 @@ from typing import Callable, Dict, Any, Awaitable
 
 from aiogram import BaseMiddleware
 from aiogram.types import Message
+from aiogram.fsm.context import FSMContext
 from db_settings.app_models import RefuelingAppModel
 from db_settings.DTO_models import RefuelGetDTO
 
@@ -17,10 +18,16 @@ class RefuelsMiddleware(BaseMiddleware):
             event: Message,
             data: Dict[str, Any]) -> Any:
         tg_id_user = event.from_user.id
-        refuel_orm = RefuelingAppModel()
-        refuels: dict[int, RefuelGetDTO] = await refuel_orm.get_refuels(tg_id_user)
-        if refuels:
-            data["refuels"] = refuels
+        state: FSMContext = data['state']
+        state_data = await state.get_data()
+        if 'refuels' in state_data:
+            return await handler(event, data)
         else:
-            data["refuels"] = None
-        return await handler(event, data)
+            refuel_orm = RefuelingAppModel()
+            refuels: dict[int, RefuelGetDTO] = await refuel_orm.get_refuels(tg_id_user)
+            await state.set_data(
+                {'refuels': {key: refuel.model_dump()
+                             for key, refuel in refuels.items()
+                             }
+                 })
+            return await handler(event, data)
