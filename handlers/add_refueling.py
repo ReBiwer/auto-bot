@@ -11,7 +11,7 @@ from keyboards.inline import get_inline_kb_check_data
 from utils.conerters import search_numbers_in_strings
 from db_settings.app_models import RefuelingAppModel
 from db_settings.DTO_models import UserGetDTO, RefuelChangeDTO
-from utils.convert_user_data import get_user_info
+from utils.convert_data import get_user_info
 
 add_refuel_router = Router()
 

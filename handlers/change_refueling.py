@@ -33,7 +33,7 @@ class ChangeRefuel(StatesGroup):
 
 
 @change_refueling_router.message(Command('change_refueling'))
-async def get_all_refuels(message: Message, state: FSMContext, refuels: dict[int, RefuelGetDTO] | None):
+async def get_all_refuels(message: Message, state: FSMContext):
     """
     Стартовый хэндлер. Выдает имеющиеся заправки в inline клавиатуры.
     :param message: Сообщение от пользователя
@@ -41,6 +41,7 @@ async def get_all_refuels(message: Message, state: FSMContext, refuels: dict[int
     :param refuels: Заправки пользователя, если они есть
     :return:
     """
+
     if refuels:
         serialized_refuels = {key: refuel.model_dump_json() for key, refuel in refuels.items()}
         await state.set_state(ChangeRefuel.refuels)
