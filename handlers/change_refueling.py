@@ -82,14 +82,12 @@ async def change_params_refuel(call: CallbackQuery, state: FSMContext):
     """
     await state.set_state(ChangeRefuel.changeable_param)
     key_param_refuel = call.data.replace('update_', '')
-    await state.update_data(changeable_param=key_param_refuel)
     name_param_refuel = params_refuel[key_param_refuel]
     async with ChatActionSender.typing(bot=bot, chat_id=call.message.chat.id):
         await asyncio.sleep(2)
         data_from_state = await state.get_data()
-        changeable_param = data_from_state['changeable_param']
         changeable_refuel: RefuelChangeDTO = RefuelChangeDTO.model_validate_json(data_from_state['changeable_refuel'])
-        cur_value = changeable_refuel.__getattr__(changeable_param)
+        cur_value = changeable_refuel.__getattr__(key_param_refuel)
         await call.message.answer(f'Текущее значение: {cur_value}\n'
                                   f'Введите {name_param_refuel}')
 
