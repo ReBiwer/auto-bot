@@ -9,6 +9,7 @@ from aiogram.utils.chat_action import ChatActionSender
 
 from create_bot import bot
 from utils.conerters import search_numbers_in_strings
+from utils.convert_data import get_refuels_info
 from db_settings.app_models import RefuelingAppModel
 from db_settings.DTO_models import RefuelGetDTO, RefuelChangeDTO
 from middlewares.refueling import RefuelsMiddleware
@@ -38,14 +39,11 @@ async def get_all_refuels(message: Message, state: FSMContext):
     Стартовый хэндлер. Выдает имеющиеся заправки в inline клавиатуры.
     :param message: Сообщение от пользователя
     :param state: Состояние где хранится вся закешированная информация
-    :param refuels: Заправки пользователя, если они есть
     :return:
     """
-
+    refuels = await get_refuels_info(state)
     if refuels:
-        serialized_refuels = {key: refuel.model_dump_json() for key, refuel in refuels.items()}
         await state.set_state(ChangeRefuel.refuels)
-        await state.update_data(refuels=serialized_refuels)
         await message.answer(text='Какую заправку вы хотите изменить?',
                              reply_markup=get_inline_kb_refuels(refuels, change_buttons=True))
     else:
@@ -63,9 +61,9 @@ async def change_refueling(call: CallbackQuery, state: FSMContext):
     """
     await state.set_state(ChangeRefuel.changeable_refuel)
     refuel_id = int(call.data.replace('change_refuel_', ''))
-    refuels = await state.get_data()
-    refuel_info = refuels['refuels'][str(refuel_id)]
-    changeable_refuel: RefuelChangeDTO = RefuelChangeDTO.model_validate_json(refuel_info)
+    refuels = await get_refuels_info(state)
+    refuel_info = refuels[refuel_id]
+    changeable_refuel: RefuelChangeDTO = RefuelChangeDTO.model_validate(refuel_info)
     await state.update_data(changeable_refuel=changeable_refuel.model_dump_json())
     async with ChatActionSender.typing(bot=bot, chat_id=call.message.chat.id):
         await asyncio.sleep(2)
