@@ -83,7 +83,7 @@ class RefuelingAppModel(BaseAppModel):
     async def add_refueling(self, refuel: RefuelChangeDTO) -> None:
         async with self.async_session_factory() as session:
             added_refuel = self.model(
-                user_id=refuel.id,
+                user_id=refuel.user_id,
                 amount_gasoline=refuel.amount_gasoline,
                 mileage=refuel.mileage,
                 cost_refueling=refuel.cost_refueling,
