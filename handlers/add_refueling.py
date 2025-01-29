@@ -139,13 +139,13 @@ async def add_refueling_correct_data(call: CallbackQuery, state: FSMContext):
     refuel = RefuelingAppModel()
     await state.set_state()
     refuel_data = {
-        'user_id': data.get('user_id'),
+        'user_id': int(data.get('user_id')),
         'amount_gasoline': data.get('amount_gasoline'),
         'mileage': data.get('mileage'),
         'cost_refueling': data.get('cost_refueling'),
         'price_gasoline': data.get('price_gasoline'),
     }
-    refuel_dto = RefuelChangeDTO(**refuel_data)
+    refuel_dto = RefuelChangeDTO.model_validate(refuel_data, from_attributes=True)
     await refuel.add_refueling(refuel_dto)
     await call.message.answer('Данные успешно добавлены')
 
