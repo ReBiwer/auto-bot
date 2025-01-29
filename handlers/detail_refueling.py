@@ -1,10 +1,11 @@
 from aiogram import Router, F
 from aiogram.filters import Command
 from aiogram.types import Message, CallbackQuery
+from aiogram.fsm.context import FSMContext
 
-from db_settings.DTO_models import RefuelGetDTO
 from middlewares.refueling import RefuelsMiddleware
 from keyboards.inline import get_inline_kb_refuels, get_inline_butt_back
+from utils.convert_data import get_refuels_info
 
 detail_refueling_router = Router()
 detail_refueling_router.message.middleware(RefuelsMiddleware())
@@ -12,7 +13,8 @@ detail_refueling_router.callback_query.middleware(RefuelsMiddleware())
 
 
 @detail_refueling_router.message(Command('detail_refueling'))
-async def get_all_refuels(message: Message, refuels: dict[int, RefuelGetDTO] | None):
+async def get_all_refuels(message: Message, state: FSMContext):
+    refuels = await get_refuels_info(state)
     if refuels:
         await message.answer(text='Выберите заправку. Ниже указана дата заправки',
                              reply_markup=get_inline_kb_refuels(refuels))
@@ -21,8 +23,9 @@ async def get_all_refuels(message: Message, refuels: dict[int, RefuelGetDTO] | N
 
 
 @detail_refueling_router.callback_query(F.data.startswith('detail_refuel_'))
-async def detail_refueling(call: CallbackQuery, refuels: dict[int, RefuelGetDTO]):
+async def detail_refueling(call: CallbackQuery, state: FSMContext):
     refuel_id = int(call.data.replace('detail_refuel_', ''))
+    refuels = await get_refuels_info(state)
     refuel = refuels[refuel_id]
     info = (f'Дата заправки: {refuel.date}\n'
             f'Пробег: {refuel.mileage}\n'
@@ -33,6 +36,7 @@ async def detail_refueling(call: CallbackQuery, refuels: dict[int, RefuelGetDTO]
 
 
 @detail_refueling_router.callback_query(F.data == 'go_to_refuels')
-async def get_all_refuels(call: CallbackQuery, refuels: dict[int, RefuelGetDTO]):
+async def get_all_refuels(call: CallbackQuery, state: FSMContext):
+    refuels = await get_refuels_info(state)
     await call.message.answer(text='Выберите заправку. Ниже указана дата заправки',
                               reply_markup=get_inline_kb_refuels(refuels))
