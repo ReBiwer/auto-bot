@@ -26,7 +26,7 @@ class RefuelsMiddleware(BaseMiddleware):
             refuel_orm = RefuelingAppModel()
             refuels: dict[int, RefuelGetDTO] = await refuel_orm.get_refuels(tg_id_user)
             await state.set_data(
-                {'refuels': {key: refuel.model_dump()
+                {'refuels': {key: refuel.model_dump_json()
                              for key, refuel in refuels.items()
                              }
                  })
