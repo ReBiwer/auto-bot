@@ -1,11 +1,16 @@
-from typing import Any, Awaitable, Callable, Dict
+from typing import Any
+from typing import Awaitable
+from typing import Callable
+from typing import Dict
 
 from aiogram import BaseMiddleware
 from aiogram.fsm.context import FSMContext
-from aiogram.types import CallbackQuery, Message
+from aiogram.types import CallbackQuery
+from aiogram.types import Message
 
 from db_settings.app_models import UserAppModel
-from db_settings.DTO_models import UserChangeDTO, UserGetDTO
+from db_settings.DTO_models import UserChangeDTO
+from db_settings.DTO_models import UserGetDTO
 
 
 class UserDBMiddleware(BaseMiddleware):
@@ -25,9 +30,7 @@ class UserDBMiddleware(BaseMiddleware):
             user_db = UserAppModel()
             user_data = {
                 "username": event.from_user.username,
-                "name": (
-                    event.from_user.first_name if event.from_user.first_name else None
-                ),
+                "name": (event.from_user.first_name if event.from_user.first_name else None),
                 "id_telegram": tg_id_user,
             }
             user = UserChangeDTO(**user_data)

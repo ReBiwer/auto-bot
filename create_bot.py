@@ -2,7 +2,8 @@ import logging
 import os
 
 import dotenv
-from aiogram import Bot, Dispatcher
+from aiogram import Bot
+from aiogram import Dispatcher
 from aiogram.client.default import DefaultBotProperties
 from aiogram.enums import ParseMode
 from aiogram.fsm.storage.memory import MemoryStorage
@@ -20,9 +21,7 @@ redis_url = f"redis://{REDIS_HOST}:{REDIS_PORT}/{REDIS_NUM_DB}"
 scheduler = AsyncIOScheduler(timezone="Europe/Moscow")
 admins = [int(admin_id) for admin_id in os.environ.get("ADMINS").split(",")]
 
-logging.basicConfig(
-    level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
-)
+logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 logger = logging.getLogger(__name__)
 
 bot = Bot(

@@ -2,15 +2,14 @@ import datetime
 from decimal import Decimal
 from typing import Annotated
 
-from sqlalchemy import String, text
+from sqlalchemy import String
+from sqlalchemy import text
 from sqlalchemy.orm import mapped_column
 from sqlalchemy.types import TypeDecorator
 
 str_256 = Annotated[str, 256]
 pk = Annotated[int, mapped_column(primary_key=True)]
-created_at = Annotated[
-    datetime.datetime, mapped_column(server_default=text("TIMEZONE('utc-3', now())"))
-]
+created_at = Annotated[datetime.datetime, mapped_column(server_default=text("TIMEZONE('utc-3', now())"))]
 
 
 class DecimalField(TypeDecorator):

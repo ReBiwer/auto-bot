@@ -1,16 +1,20 @@
 import asyncio
 
-from aiogram import F, Router
+from aiogram import F
+from aiogram import Router
 from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
-from aiogram.fsm.state import State, StatesGroup
-from aiogram.types import CallbackQuery, Message
+from aiogram.fsm.state import State
+from aiogram.fsm.state import StatesGroup
+from aiogram.types import CallbackQuery
+from aiogram.types import Message
 from aiogram.utils.chat_action import ChatActionSender
 
 from create_bot import bot
 from db_settings.app_models import RefuelingAppModel
 from db_settings.DTO_models import RefuelGetDTO
-from keyboards.inline import get_inline_kb_refuels, inline_confirm_buttons
+from keyboards.inline import get_inline_kb_refuels
+from keyboards.inline import inline_confirm_buttons
 from middlewares.refueling import RefuelsMiddleware
 
 delete_refueling_router = Router()
@@ -23,13 +27,9 @@ class DeleteRefuel(StatesGroup):
 
 
 @delete_refueling_router.message(Command("delete_refueling"))
-async def get_all_refuels(
-    message: Message, state: FSMContext, refuels: dict[int, RefuelGetDTO] | None
-):
+async def get_all_refuels(message: Message, state: FSMContext, refuels: dict[int, RefuelGetDTO] | None):
     if refuels:
-        serialized_refuels = {
-            key: refuel.model_dump_json() for key, refuel in refuels.items()
-        }
+        serialized_refuels = {key: refuel.model_dump_json() for key, refuel in refuels.items()}
         await state.set_state(DeleteRefuel.refuels)
         await state.update_data(refuels=serialized_refuels)
         await message.answer(
@@ -40,9 +40,7 @@ async def get_all_refuels(
         await message.answer(text="У вас пока нет заправок")
 
 
-@delete_refueling_router.callback_query(
-    F.data.startswith("delete_refuel_"), DeleteRefuel.refuels
-)
+@delete_refueling_router.callback_query(F.data.startswith("delete_refuel_"), DeleteRefuel.refuels)
 async def confirm_delete_refuel(call: CallbackQuery, state: FSMContext):
     data_from_state = await state.get_data()
     refuel_id = int(call.data.replace("delete_refuel_", ""))
@@ -73,9 +71,7 @@ async def delete_refuel(call: CallbackQuery, state: FSMContext):
     await state.set_state()
 
 
-@delete_refueling_router.callback_query(
-    F.data == "not_confirm", DeleteRefuel.confirmation
-)
+@delete_refueling_router.callback_query(F.data == "not_confirm", DeleteRefuel.confirmation)
 async def not_confirm_delete(call: CallbackQuery, state: FSMContext):
     await state.set_state()
     await call.message.answer(text="Удаление заправки прервано")

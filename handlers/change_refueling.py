@@ -1,19 +1,21 @@
 import asyncio
 
-from aiogram import F, Router
+from aiogram import F
+from aiogram import Router
 from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
-from aiogram.fsm.state import State, StatesGroup
-from aiogram.types import CallbackQuery, Message
+from aiogram.fsm.state import State
+from aiogram.fsm.state import StatesGroup
+from aiogram.types import CallbackQuery
+from aiogram.types import Message
 from aiogram.utils.chat_action import ChatActionSender
 
 from create_bot import bot
 from db_settings.app_models import RefuelingAppModel
-from db_settings.DTO_models import RefuelChangeDTO, RefuelGetDTO
-from keyboards.inline import (
-    get_inline_kb_refuels,
-    inline_choose_changed_parameters_refueling,
-)
+from db_settings.DTO_models import RefuelChangeDTO
+from db_settings.DTO_models import RefuelGetDTO
+from keyboards.inline import get_inline_kb_refuels
+from keyboards.inline import inline_choose_changed_parameters_refueling
 from middlewares.refueling import RefuelsMiddleware
 from utils.conerters import search_numbers_in_strings
 from utils.convert_data import get_refuels_info
@@ -54,9 +56,7 @@ async def get_all_refuels(message: Message, state: FSMContext):
         await message.answer(text="У вас пока нет заправок")
 
 
-@change_refueling_router.callback_query(
-    F.data.startswith("change_refuel_"), ChangeRefuel.refuels
-)
+@change_refueling_router.callback_query(F.data.startswith("change_refuel_"), ChangeRefuel.refuels)
 async def change_refueling(call: CallbackQuery, state: FSMContext):
     """
     Хэндлер, где сохраняется id заправки, которую нужно изменить.
@@ -79,9 +79,7 @@ async def change_refueling(call: CallbackQuery, state: FSMContext):
         )
 
 
-@change_refueling_router.callback_query(
-    F.data.startswith("update_"), ChangeRefuel.changeable_refuel
-)
+@change_refueling_router.callback_query(F.data.startswith("update_"), ChangeRefuel.changeable_refuel)
 async def change_params_refuel(call: CallbackQuery, state: FSMContext):
     """
     Хэндлер, где сохраняется имя атрибута, которое нужно изменить.
@@ -96,13 +94,9 @@ async def change_params_refuel(call: CallbackQuery, state: FSMContext):
     async with ChatActionSender.typing(bot=bot, chat_id=call.message.chat.id):
         await asyncio.sleep(2)
         data_from_state = await state.get_data()
-        changeable_refuel: RefuelChangeDTO = RefuelChangeDTO.model_validate_json(
-            data_from_state["changeable_refuel"]
-        )
+        changeable_refuel: RefuelChangeDTO = RefuelChangeDTO.model_validate_json(data_from_state["changeable_refuel"])
         cur_value = changeable_refuel.__getattr__(key_param_refuel)
-        await call.message.answer(
-            f"Текущее значение: {cur_value}\n" f"Введите {name_param_refuel}"
-        )
+        await call.message.answer(f"Текущее значение: {cur_value}\n" f"Введите {name_param_refuel}")
 
 
 @change_refueling_router.message(ChangeRefuel.changeable_param)
@@ -116,9 +110,7 @@ async def save_param_refuel(message: Message, state: FSMContext):
     new_value_param = search_numbers_in_strings(message.text)
     data_from_state = await state.get_data()
     changeable_param = data_from_state["changeable_param"]
-    changeable_refuel: RefuelChangeDTO = RefuelChangeDTO.model_validate_json(
-        data_from_state["changeable_refuel"]
-    )
+    changeable_refuel: RefuelChangeDTO = RefuelChangeDTO.model_validate_json(data_from_state["changeable_refuel"])
     changeable_refuel.__setattr__(changeable_param, new_value_param)
     refuel_app_model = RefuelingAppModel()
     await refuel_app_model.update_refuel(changeable_refuel)

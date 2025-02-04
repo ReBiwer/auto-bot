@@ -1,6 +1,7 @@
 from aiogram.fsm.context import FSMContext
 
-from db_settings.DTO_models import RefuelGetDTO, UserGetDTO
+from db_settings.DTO_models import RefuelGetDTO
+from db_settings.DTO_models import UserGetDTO
 
 
 async def get_user_info(state: FSMContext) -> UserGetDTO:
@@ -23,10 +24,7 @@ async def get_refuels_info(state: FSMContext) -> dict[int, RefuelGetDTO] | None:
     data_state = await state.get_data()
     if data_state["refuels"] is not None:
         refuels_data: dict[int, str] = data_state["refuels"]
-        refuels = {
-            int(key): RefuelGetDTO.model_validate_json(refuel)
-            for key, refuel in refuels_data.items()
-        }
+        refuels = {int(key): RefuelGetDTO.model_validate_json(refuel) for key, refuel in refuels_data.items()}
         return refuels
     else:
         return None

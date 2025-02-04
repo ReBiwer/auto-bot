@@ -1,4 +1,7 @@
-from typing import Any, Awaitable, Callable, Dict
+from typing import Any
+from typing import Awaitable
+from typing import Callable
+from typing import Dict
 
 from aiogram import BaseMiddleware
 from aiogram.fsm.context import FSMContext
@@ -27,11 +30,5 @@ class RefuelsMiddleware(BaseMiddleware):
         else:
             refuel_orm = RefuelingAppModel()
             refuels: dict[int, RefuelGetDTO] = await refuel_orm.get_refuels(tg_id_user)
-            await state.set_data(
-                {
-                    "refuels": {
-                        key: refuel.model_dump_json() for key, refuel in refuels.items()
-                    }
-                }
-            )
+            await state.set_data({"refuels": {key: refuel.model_dump_json() for key, refuel in refuels.items()}})
             return await handler(event, data)

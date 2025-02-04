@@ -1,14 +1,17 @@
-from sqlalchemy import Column, ForeignKey, String
+from sqlalchemy import Column
+from sqlalchemy import ForeignKey
+from sqlalchemy import String
 from sqlalchemy.ext.asyncio import AsyncAttrs
-from sqlalchemy.orm import (
-    DeclarativeBase,
-    Mapped,
-    declared_attr,
-    mapped_column,
-    relationship,
-)
+from sqlalchemy.orm import DeclarativeBase
+from sqlalchemy.orm import Mapped
+from sqlalchemy.orm import declared_attr
+from sqlalchemy.orm import mapped_column
+from sqlalchemy.orm import relationship
 
-from db_settings.custom_field import DecimalField, created_at, pk, str_256
+from db_settings.custom_field import DecimalField
+from db_settings.custom_field import created_at
+from db_settings.custom_field import pk
+from db_settings.custom_field import str_256
 
 
 class Base(AsyncAttrs, DeclarativeBase):

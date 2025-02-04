@@ -1,17 +1,25 @@
 from decimal import Decimal
 
-from sqlalchemy import create_engine, delete, exists, select, update
-from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
-from sqlalchemy.orm import contains_eager, join, selectinload, sessionmaker
+from sqlalchemy import create_engine
+from sqlalchemy import delete
+from sqlalchemy import exists
+from sqlalchemy import select
+from sqlalchemy import update
+from sqlalchemy.ext.asyncio import async_sessionmaker
+from sqlalchemy.ext.asyncio import create_async_engine
+from sqlalchemy.orm import contains_eager
+from sqlalchemy.orm import join
+from sqlalchemy.orm import selectinload
+from sqlalchemy.orm import sessionmaker
 
 from db_settings.config_db import settings
-from db_settings.db_models import Base, Refueling, User
-from db_settings.DTO_models import (
-    RefuelChangeDTO,
-    RefuelGetDTO,
-    UserChangeDTO,
-    UserGetDTO,
-)
+from db_settings.db_models import Base
+from db_settings.db_models import Refueling
+from db_settings.db_models import User
+from db_settings.DTO_models import RefuelChangeDTO
+from db_settings.DTO_models import RefuelGetDTO
+from db_settings.DTO_models import UserChangeDTO
+from db_settings.DTO_models import UserGetDTO
 
 
 class BaseAppModel:
@@ -41,9 +49,7 @@ class UserAppModel(BaseAppModel):
 
     async def add_user(self, user: UserChangeDTO) -> bool:
         async with self.async_session_factory() as session:
-            added_user = self.model(
-                username=user.username, name=user.name, id_telegram=user.id_telegram
-            )
+            added_user = self.model(username=user.username, name=user.name, id_telegram=user.id_telegram)
             check_user = await self.check_user(user.id_telegram)
             if not check_user:
                 session.add(added_user)
@@ -105,10 +111,7 @@ class RefuelingAppModel(BaseAppModel):
             )
             res = await session.execute(query)
             refuels = res.unique().scalars().all()
-            refuels_dto = {
-                row.id: RefuelGetDTO.model_validate(row, from_attributes=True)
-                for row in refuels
-            }
+            refuels_dto = {row.id: RefuelGetDTO.model_validate(row, from_attributes=True) for row in refuels}
         return refuels_dto
 
     async def update_refuel(self, refuel: RefuelChangeDTO) -> None:

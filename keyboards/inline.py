@@ -1,4 +1,5 @@
-from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
+from aiogram.types import InlineKeyboardButton
+from aiogram.types import InlineKeyboardMarkup
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
 from db_settings.DTO_models import RefuelGetDTO
@@ -50,28 +51,14 @@ def inline_confirm_buttons():
 
 def inline_choose_changed_parameters_refueling():
     inline_but = [
-        [
-            InlineKeyboardButton(
-                text="Количество бензина", callback_data="update_amount_gasoline"
-            )
-        ],
+        [InlineKeyboardButton(text="Количество бензина", callback_data="update_amount_gasoline")],
         [InlineKeyboardButton(text="Пробег", callback_data="update_mileage")],
-        [
-            InlineKeyboardButton(
-                text="Стоимость заправки", callback_data="update_cost_refueling"
-            )
-        ],
-        [
-            InlineKeyboardButton(
-                text="Цена за литр бензина", callback_data="update_price_gasoline"
-            )
-        ],
+        [InlineKeyboardButton(text="Стоимость заправки", callback_data="update_cost_refueling")],
+        [InlineKeyboardButton(text="Цена за литр бензина", callback_data="update_price_gasoline")],
     ]
     return InlineKeyboardMarkup(inline_keyboard=inline_but)
 
 
 def get_inline_butt_back():
-    but = InlineKeyboardButton(
-        text="Обратно к списку заправок", callback_data="go_to_refuels"
-    )
+    but = InlineKeyboardButton(text="Обратно к списку заправок", callback_data="go_to_refuels")
     return InlineKeyboardMarkup(inline_keyboard=[[but]])
