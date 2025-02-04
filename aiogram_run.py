@@ -1,11 +1,13 @@
 import asyncio
+
+from aiogram.types import BotCommand, BotCommandScopeDefault
+
 from create_bot import bot, dp, scheduler
-from handlers.start import start_router
 from handlers.add_refueling import add_refuel_router
-from handlers.detail_refueling import detail_refueling_router
 from handlers.change_refueling import change_refueling_router
 from handlers.delete_refueling import delete_refueling_router
-from aiogram.types import BotCommand, BotCommandScopeDefault
+from handlers.detail_refueling import detail_refueling_router
+from handlers.start import start_router
 
 # from work_time.time_func import send_time_msg
 

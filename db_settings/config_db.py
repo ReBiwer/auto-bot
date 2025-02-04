@@ -1,8 +1,8 @@
-import dotenv
 import os
 from pathlib import Path
-from pydantic_settings import BaseSettings, SettingsConfigDict
 
+import dotenv
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 dotenv.load_dotenv()

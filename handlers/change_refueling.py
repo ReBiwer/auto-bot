@@ -1,23 +1,20 @@
 import asyncio
 
-from aiogram import Router, F
+from aiogram import F, Router
 from aiogram.filters import Command
-from aiogram.types import Message, CallbackQuery
-from aiogram.fsm.state import State, StatesGroup
 from aiogram.fsm.context import FSMContext
+from aiogram.fsm.state import State, StatesGroup
+from aiogram.types import CallbackQuery, Message
 from aiogram.utils.chat_action import ChatActionSender
 
 from create_bot import bot
+from db_settings.app_models import RefuelingAppModel
+from db_settings.DTO_models import RefuelChangeDTO, RefuelGetDTO
+from keyboards.inline import (get_inline_kb_refuels,
+                              inline_choose_changed_parameters_refueling)
+from middlewares.refueling import RefuelsMiddleware
 from utils.conerters import search_numbers_in_strings
 from utils.convert_data import get_refuels_info
-from db_settings.app_models import RefuelingAppModel
-from db_settings.DTO_models import RefuelGetDTO, RefuelChangeDTO
-from middlewares.refueling import RefuelsMiddleware
-from keyboards.inline import (
-    get_inline_kb_refuels,
-    inline_choose_changed_parameters_refueling,
-)
-
 
 change_refueling_router = Router()
 change_refueling_router.message.middleware(RefuelsMiddleware())

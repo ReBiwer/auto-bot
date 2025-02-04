@@ -3,8 +3,8 @@ from decimal import Decimal
 from typing import Annotated
 
 from sqlalchemy import String, text
-from sqlalchemy.types import TypeDecorator
 from sqlalchemy.orm import mapped_column
+from sqlalchemy.types import TypeDecorator
 
 str_256 = Annotated[str, 256]
 pk = Annotated[int, mapped_column(primary_key=True)]

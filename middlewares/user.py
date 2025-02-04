@@ -1,8 +1,9 @@
-from typing import Callable, Dict, Any, Awaitable
+from typing import Any, Awaitable, Callable, Dict
 
 from aiogram import BaseMiddleware
-from aiogram.types import Message, CallbackQuery
 from aiogram.fsm.context import FSMContext
+from aiogram.types import CallbackQuery, Message
+
 from db_settings.app_models import UserAppModel
 from db_settings.DTO_models import UserChangeDTO, UserGetDTO
 

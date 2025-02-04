@@ -1,12 +1,12 @@
-import os
 import logging
+import os
+
 import dotenv
 from aiogram import Bot, Dispatcher
 from aiogram.client.default import DefaultBotProperties
 from aiogram.enums import ParseMode
 from aiogram.fsm.storage.memory import MemoryStorage
 from aiogram.fsm.storage.redis import RedisStorage
-
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
 dotenv.load_dotenv()

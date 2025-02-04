@@ -1,9 +1,9 @@
 from datetime import datetime
-from typing import Optional, Any
 from decimal import Decimal
-from typing_extensions import Self
+from typing import Any, Optional
 
 from pydantic import BaseModel, field_validator
+from typing_extensions import Self
 
 
 class UserChangeDTO(BaseModel):

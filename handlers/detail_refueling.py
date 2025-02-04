@@ -1,10 +1,10 @@
-from aiogram import Router, F
+from aiogram import F, Router
 from aiogram.filters import Command
-from aiogram.types import Message, CallbackQuery
 from aiogram.fsm.context import FSMContext
+from aiogram.types import CallbackQuery, Message
 
+from keyboards.inline import get_inline_butt_back, get_inline_kb_refuels
 from middlewares.refueling import RefuelsMiddleware
-from keyboards.inline import get_inline_kb_refuels, get_inline_butt_back
 from utils.convert_data import get_refuels_info
 
 detail_refueling_router = Router()

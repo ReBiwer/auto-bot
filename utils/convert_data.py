@@ -1,6 +1,6 @@
 from aiogram.fsm.context import FSMContext
 
-from db_settings.DTO_models import UserGetDTO, RefuelGetDTO
+from db_settings.DTO_models import RefuelGetDTO, UserGetDTO
 
 
 async def get_user_info(state: FSMContext) -> UserGetDTO:

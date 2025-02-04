@@ -5,7 +5,6 @@ from aiogram.types import Message
 
 from middlewares.user import UserDBMiddleware
 
-
 start_router = Router()
 start_router.message.middleware(UserDBMiddleware())
 

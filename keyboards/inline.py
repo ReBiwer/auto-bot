@@ -1,7 +1,7 @@
-from db_settings.DTO_models import RefuelGetDTO
-
-from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
+from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from aiogram.utils.keyboard import InlineKeyboardBuilder
+
+from db_settings.DTO_models import RefuelGetDTO
 
 
 def get_inline_kb_check_data() -> InlineKeyboardMarkup:

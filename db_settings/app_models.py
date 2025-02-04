@@ -1,16 +1,13 @@
 from decimal import Decimal
-from db_settings.db_models import User, Base, Refueling
-from db_settings.DTO_models import (
-    UserChangeDTO,
-    UserGetDTO,
-    RefuelChangeDTO,
-    RefuelGetDTO,
-)
 
-from sqlalchemy import create_engine, select, update, delete, exists
-from sqlalchemy.orm import sessionmaker, selectinload, join, contains_eager
-from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
+from sqlalchemy import create_engine, delete, exists, select, update
+from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
+from sqlalchemy.orm import contains_eager, join, selectinload, sessionmaker
+
 from db_settings.config_db import settings
+from db_settings.db_models import Base, Refueling, User
+from db_settings.DTO_models import (RefuelChangeDTO, RefuelGetDTO,
+                                    UserChangeDTO, UserGetDTO)
 
 
 class BaseAppModel:
