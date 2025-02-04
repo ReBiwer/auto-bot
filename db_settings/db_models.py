@@ -1,7 +1,12 @@
 from sqlalchemy import Column, ForeignKey, String
 from sqlalchemy.ext.asyncio import AsyncAttrs
-from sqlalchemy.orm import (DeclarativeBase, Mapped, declared_attr,
-                            mapped_column, relationship)
+from sqlalchemy.orm import (
+    DeclarativeBase,
+    Mapped,
+    declared_attr,
+    mapped_column,
+    relationship,
+)
 
 from db_settings.custom_field import DecimalField, created_at, pk, str_256
 

@@ -10,8 +10,10 @@ from aiogram.utils.chat_action import ChatActionSender
 from create_bot import bot
 from db_settings.app_models import RefuelingAppModel
 from db_settings.DTO_models import RefuelChangeDTO, RefuelGetDTO
-from keyboards.inline import (get_inline_kb_refuels,
-                              inline_choose_changed_parameters_refueling)
+from keyboards.inline import (
+    get_inline_kb_refuels,
+    inline_choose_changed_parameters_refueling,
+)
 from middlewares.refueling import RefuelsMiddleware
 from utils.conerters import search_numbers_in_strings
 from utils.convert_data import get_refuels_info

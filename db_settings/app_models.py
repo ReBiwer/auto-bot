@@ -6,8 +6,12 @@ from sqlalchemy.orm import contains_eager, join, selectinload, sessionmaker
 
 from db_settings.config_db import settings
 from db_settings.db_models import Base, Refueling, User
-from db_settings.DTO_models import (RefuelChangeDTO, RefuelGetDTO,
-                                    UserChangeDTO, UserGetDTO)
+from db_settings.DTO_models import (
+    RefuelChangeDTO,
+    RefuelGetDTO,
+    UserChangeDTO,
+    UserGetDTO,
+)
 
 
 class BaseAppModel:
