@@ -6,16 +6,17 @@ from handlers.detail_refueling import detail_refueling_router
 from handlers.change_refueling import change_refueling_router
 from handlers.delete_refueling import delete_refueling_router
 from aiogram.types import BotCommand, BotCommandScopeDefault
+
 # from work_time.time_func import send_time_msg
 
 
 async def set_commands():
     commands = [
-        BotCommand(command='start', description='Старт'),
-        BotCommand(command='add_refueling', description='Добавить заправку'),
-        BotCommand(command='change_refueling', description='Изменить заправку'),
-        BotCommand(command='delete_refueling', description='Удалить заправку'),
-        BotCommand(command='detail_refueling', description='Узнать о своих заправках'),
+        BotCommand(command="start", description="Старт"),
+        BotCommand(command="add_refueling", description="Добавить заправку"),
+        BotCommand(command="change_refueling", description="Изменить заправку"),
+        BotCommand(command="delete_refueling", description="Удалить заправку"),
+        BotCommand(command="detail_refueling", description="Узнать о своих заправках"),
     ]
     await bot.set_my_commands(commands, BotCommandScopeDefault())
 

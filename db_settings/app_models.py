@@ -4,7 +4,7 @@ from db_settings.DTO_models import (
     UserChangeDTO,
     UserGetDTO,
     RefuelChangeDTO,
-    RefuelGetDTO
+    RefuelGetDTO,
 )
 
 from sqlalchemy import create_engine, select, update, delete, exists
@@ -40,7 +40,9 @@ class UserAppModel(BaseAppModel):
 
     async def add_user(self, user: UserChangeDTO) -> bool:
         async with self.async_session_factory() as session:
-            added_user = self.model(username=user.username, name=user.name, id_telegram=user.id_telegram)
+            added_user = self.model(
+                username=user.username, name=user.name, id_telegram=user.id_telegram
+            )
             check_user = await self.check_user(user.id_telegram)
             if not check_user:
                 session.add(added_user)
@@ -102,16 +104,18 @@ class RefuelingAppModel(BaseAppModel):
             )
             res = await session.execute(query)
             refuels = res.unique().scalars().all()
-            refuels_dto = {row.id: RefuelGetDTO.model_validate(row, from_attributes=True)
-                           for row in refuels}
+            refuels_dto = {
+                row.id: RefuelGetDTO.model_validate(row, from_attributes=True)
+                for row in refuels
+            }
         return refuels_dto
 
     async def update_refuel(self, refuel: RefuelChangeDTO) -> None:
         async with self.async_session_factory() as session:
             query = (
-                update(self.model).
-                filter_by(id=refuel.id).
-                values(
+                update(self.model)
+                .filter_by(id=refuel.id)
+                .values(
                     user_id=refuel.user_id,
                     amount_gasoline=refuel.amount_gasoline,
                     mileage=refuel.mileage,

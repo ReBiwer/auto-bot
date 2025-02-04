@@ -13,21 +13,24 @@ class RefuelsMiddleware(BaseMiddleware):
     """
 
     async def __call__(
-            self,
-            handler: Callable[[Message, Dict[str, Any]], Awaitable[Any]],
-            event: Message,
-            data: Dict[str, Any]) -> Any:
+        self,
+        handler: Callable[[Message, Dict[str, Any]], Awaitable[Any]],
+        event: Message,
+        data: Dict[str, Any],
+    ) -> Any:
         tg_id_user = event.from_user.id
-        state: FSMContext = data['state']
+        state: FSMContext = data["state"]
         state_data = await state.get_data()
-        if 'refuels' in state_data:
+        if "refuels" in state_data:
             return await handler(event, data)
         else:
             refuel_orm = RefuelingAppModel()
             refuels: dict[int, RefuelGetDTO] = await refuel_orm.get_refuels(tg_id_user)
             await state.set_data(
-                {'refuels': {key: refuel.model_dump_json()
-                             for key, refuel in refuels.items()
-                             }
-                 })
+                {
+                    "refuels": {
+                        key: refuel.model_dump_json() for key, refuel in refuels.items()
+                    }
+                }
+            )
             return await handler(event, data)

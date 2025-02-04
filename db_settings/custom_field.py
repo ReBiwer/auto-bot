@@ -8,7 +8,9 @@ from sqlalchemy.orm import mapped_column
 
 str_256 = Annotated[str, 256]
 pk = Annotated[int, mapped_column(primary_key=True)]
-created_at = Annotated[datetime.datetime, mapped_column(server_default=text("TIMEZONE('utc-3', now())"))]
+created_at = Annotated[
+    datetime.datetime, mapped_column(server_default=text("TIMEZONE('utc-3', now())"))
+]
 
 
 class DecimalField(TypeDecorator):

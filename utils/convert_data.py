@@ -10,7 +10,7 @@ async def get_user_info(state: FSMContext) -> UserGetDTO:
     :return: объект с информацией о пользователе
     """
     data_state = await state.get_data()
-    user_data = data_state['user']
+    user_data = data_state["user"]
     return UserGetDTO.model_validate_json(user_data)
 
 
@@ -21,8 +21,8 @@ async def get_refuels_info(state: FSMContext) -> dict[int, RefuelGetDTO] | None:
     :return:
     """
     data_state = await state.get_data()
-    if data_state['refuels'] is not None:
-        refuels_data: dict[int, str] = data_state['refuels']
+    if data_state["refuels"] is not None:
+        refuels_data: dict[int, str] = data_state["refuels"]
         refuels = {
             int(key): RefuelGetDTO.model_validate_json(refuel)
             for key, refuel in refuels_data.items()

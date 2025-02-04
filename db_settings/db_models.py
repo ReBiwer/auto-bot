@@ -1,15 +1,19 @@
 from db_settings.custom_field import str_256, pk, created_at, DecimalField
 
 from sqlalchemy import String, ForeignKey, Column
-from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship, declared_attr
+from sqlalchemy.orm import (
+    DeclarativeBase,
+    Mapped,
+    mapped_column,
+    relationship,
+    declared_attr,
+)
 from sqlalchemy.ext.asyncio import AsyncAttrs
 
 
 class Base(AsyncAttrs, DeclarativeBase):
     __abstract__ = True
-    type_annotation_map = {
-        str_256: String(256)
-    }
+    type_annotation_map = {str_256: String(256)}
 
     repr_cols_num = 3
     repr_cols = tuple()
@@ -35,7 +39,7 @@ class User(Base):
     name: Mapped[str_256 | None]
     id_telegram: Mapped[int]
 
-    refuelings: Mapped[list['Refueling']] = relationship(back_populates='user')
+    refuelings: Mapped[list["Refueling"]] = relationship(back_populates="user")
 
 
 class Refueling(Base):
@@ -48,4 +52,4 @@ class Refueling(Base):
     cost_refueling = Column(DecimalField(50))
     price_gasoline = Column(DecimalField(50))
 
-    user: Mapped["User"] = relationship(back_populates='refuelings')
+    user: Mapped["User"] = relationship(back_populates="refuelings")
